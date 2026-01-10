@@ -1,0 +1,69 @@
+---
+config:
+  layout: dagre
+---
+classDiagram
+
+    class UserKind {
+	    common
+	    seller
+    }
+    <<enumeration>> UserKind
+
+    class Seller {
+    }
+
+    class Common {
+    }
+
+    class User {
+	    -int id
+	    -String name
+	    -UserKind kind
+	    -String document
+	    -String mail
+	    -String password
+	    -Wallet wallet
+	    +canTransfer(): Boolean
+    }
+
+
+    class Wallet {
+	    -int id
+	    -int userId
+	    -float balance
+
+        +debit(float amount)
+        +credit(float amount)
+    }
+
+    class Transaction {
+	    -int id
+	    -User payer
+        -User payee
+	    -float amount
+    }
+
+    class EntryKind {
+	    debit
+	    credit
+    }
+    <<enumeration>> EntryKind
+
+    class LedgerEntry {
+	    -int id
+	    -Wallet wallet
+        -Transaction transaction
+        -EntryKind kind
+        -float amount
+    }
+
+    User <|-- Seller
+    User <|-- Common
+    User --* UserKind : uses
+    LedgerEntry --* EntryKind : uses
+    User "1" *-- "1" Wallet
+    Wallet "1" -- "0..*" LedgerEntry
+    Transaction "1" -- "2" LedgerEntry
+    User "1" -- "0..*" Transaction : payer
+    User "1" -- "0..*" Transaction : payee
