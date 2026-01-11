@@ -18,10 +18,10 @@ use Hyperf\Testing\TestCase;
  * @internal
  * @coversNothing
  */
-class ExampleTest extends TestCase
+class IndexTest extends TestCase
 {
     public function testExample()
     {
-        $this->get('/')->assertOk()->assertSee('Hyperf');
+        $this->get('/')->assertOk()->assertSee('It Works');
     }
 }
