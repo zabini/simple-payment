@@ -6,6 +6,7 @@ namespace App\Core\Domain\User;
 
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
+use App\Core\Domain\Wallet;
 use Ramsey\Uuid\Uuid;
 
 abstract class User
@@ -19,6 +20,7 @@ abstract class User
      * @param string $document
      * @param string $email
      * @param string $password
+     * @param Wallet $wallet
      */
     protected function __construct(
         private string $id,
@@ -27,7 +29,8 @@ abstract class User
         private DocumentType $documentType,
         private string $document,
         private string $email,
-        private string $password
+        private string $password,
+        private Wallet $wallet
     ) {}
 
     public function getId(): string
@@ -66,6 +69,14 @@ abstract class User
     }
 
     /**
+     * @return Wallet
+     */
+    public function getWallet(): Wallet
+    {
+        return $this->wallet;
+    }
+
+    /**
      * @return boolean
      */
     abstract public function canTransfer(): bool;
@@ -90,16 +101,18 @@ abstract class User
         DocumentType $documentType,
         string $document,
         string $email,
-        string $password
+        string $password,
+        Wallet $wallet,
     ): self {
         return new static(
-            $id ?? Uuid::uuid4()->toString(),
+            $id,
             $name,
             static::providesKind(),
             $documentType,
             $document,
             $email,
-            $password
+            $password,
+            $wallet
         );
     }
 }

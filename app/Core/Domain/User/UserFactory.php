@@ -7,6 +7,8 @@ namespace App\Core\Domain\User;
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
 use App\Core\Domain\Exceptions\InvalidUser;
+use App\Core\Domain\Wallet;
+use Ramsey\Uuid\Uuid;
 
 final class UserFactory
 {
@@ -29,15 +31,25 @@ final class UserFactory
         string $email,
         string $password,
         ?string $id = null,
+        ?Wallet $wallet = null,
     ): User {
+
         $typedDocument = DocumentType::tryFrom($documentType);
         if ($typedDocument === null) {
             throw InvalidUser::invalidDocumentType($documentType);
         }
 
+        if ($id === null) {
+            $id = Uuid::uuid4()->toString();
+        }
+
+        if ($wallet === null) {
+            $wallet = Wallet::create($id);
+        }
+
         return match ($kind) {
-            UserKind::common->value => Common::make($id, $name, $typedDocument, $document, $email, $password),
-            UserKind::seller->value => Seller::make($id, $name, $typedDocument, $document, $email, $password),
+            UserKind::common->value => Common::make($id, $name, $typedDocument, $document, $email, $password, $wallet),
+            UserKind::seller->value => Seller::make($id, $name, $typedDocument, $document, $email, $password, $wallet),
             default => throw InvalidUser::invalidUserType($kind),
         };
     }

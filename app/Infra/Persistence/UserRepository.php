@@ -6,7 +6,9 @@ use App\Core\Domain\User\User;
 use App\Core\Domain\Contracts\UserRepository as UserRepositoryInterface;
 use App\Core\Domain\Exceptions\UserNotFound;
 use App\Core\Domain\User\UserFactory;
+use App\Core\Domain\Wallet;
 use App\Infra\ORM\User as ORMUser;
+use App\Infra\ORM\Wallet as ORMWallet;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -26,6 +28,14 @@ class UserRepository implements UserRepositoryInterface
         ]);
 
         $ormUser->save();
+
+        $ormWallet = new ORMWallet([
+            'id' => $user->getWallet()->getId(),
+            'user_id' => $user->getWallet()->getUserId(),
+            'balance' => $user->getWallet()->getBalance(),
+        ]);
+
+        $ormWallet->save();
     }
 
     /** @inheritDoc */
@@ -74,7 +84,12 @@ class UserRepository implements UserRepositoryInterface
             documentType: $ormUser->document_type,
             document: $ormUser->document,
             email: $ormUser->email,
-            password: $ormUser->password
+            password: $ormUser->password,
+            wallet: Wallet::create(
+                id: $ormUser->wallet->id,
+                userId: $ormUser->wallet->user_id,
+                balance: $ormUser->wallet->balance,
+            )
         );
     }
 }

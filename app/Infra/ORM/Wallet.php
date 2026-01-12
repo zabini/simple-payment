@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infra\ORM;
 
+use App\Core\Domain\Contracts\Enum\DocumentType;
+use App\Core\Domain\Contracts\Enum\UserKind;
 use Hyperf\DbConnection\Model\Model;
 
 /**
@@ -14,28 +16,19 @@ use Hyperf\DbConnection\Model\Model;
  * @property string $email
  * @property string $password
  */
-class User extends Model
+class Wallet extends Model
 {
     /**
      * The table associated with the model.
      */
-    protected ?string $table = 'users';
+    protected ?string $table = 'wallets';
 
     /**
      * The attributes that are mass assignable.
      */
     protected array $fillable = [
         'id',
-        'name',
-        'kind',
-        'document_type',
-        'document',
-        'email',
-        'password'
+        'user_id',
+        'balance',
     ];
-
-    public function wallet()
-    {
-        return $this->hasOne(Wallet::class, 'user_id', 'id');
-    }
 }

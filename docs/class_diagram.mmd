@@ -16,10 +16,11 @@ classDiagram
     class Common {
     }
 
-    class User {
-	    -int id
+    class User <<abstract class>> {
+	    -String id
 	    -String name
 	    -UserKind kind
+	    -String document_type
 	    -String document
 	    -String mail
 	    -String password
@@ -30,7 +31,7 @@ classDiagram
 
     class Wallet {
 	    -int id
-	    -int userId
+	    -String userId
 	    -float balance
 
         +debit(float amount)
