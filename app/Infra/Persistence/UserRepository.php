@@ -4,15 +4,15 @@ namespace App\Infra\Persistence;
 
 use App\Core\Domain\User\User;
 use App\Core\Domain\Contracts\UserRepository as UserRepositoryInterface;
+use App\Core\Domain\Exceptions\UserNotFound;
 use App\Core\Domain\User\UserFactory;
 use App\Infra\ORM\User as ORMUser;
 
 class UserRepository implements UserRepositoryInterface
 {
+    public function __construct(private UserFactory $factory) {}
 
-    /**
-     * @param User $user
-     */
+    /** @inheritDoc */
     public function save(User $user): void
     {
         $ormUser = new ORMUser([
@@ -28,36 +28,53 @@ class UserRepository implements UserRepositoryInterface
         $ormUser->save();
     }
 
-    /**
-     * @param string $id
-     * @return User
-     */
+    /** @inheritDoc */
     public function getOneById(string $id): User
     {
-        throw new \BadMethodCallException('UserRepository::getOneById not implemented');
+        $ormUser = ORMUser::query()->find($id);
+        if (!$ormUser instanceof ORMUser) {
+            throw UserNotFound::withId($id);
+        }
+
+        return $this->rebuild($ormUser);
     }
 
+    /** @inheritDoc */
     public function getOneOrNullByEmail(string $email): ?User
     {
-        // $ormUser = ORMUser::query()->where('email', $email);
+        $ormUser = ORMUser::query()->where('email', $email)
+            ->first();
 
-        // if ($ormUser instanceof ORMUser) {
-        //     // UserFactory::create(
-        //     //     $ormUser->name,
-        //     //     $ormUser->kind,
-        //     //     $ormUser->document_type,
-        //     //     $ormUser->document,
-        //     //     $ormUser->mail,
-        //     //     $ormUser->password
-        //     // );
-        // }
+        if (!$ormUser instanceof ORMUser) {
+            return null;
+        }
 
-        return null;
+        return $this->rebuild($ormUser);
     }
 
+    /** @inheritDoc */
     public function getOneOrNullByDocument(string $document): ?User
     {
-        // throw new \BadMethodCallException('UserRepository::getOneOrNullByDocument not implemented');
-        return null;
+        $ormUser = ORMUser::query()->where('document', $document)->first();
+
+        if (!$ormUser instanceof ORMUser) {
+            return null;
+        }
+
+        return $this->rebuild($ormUser);
+    }
+
+    /** @inheritDoc */
+    private function rebuild(ORMUser $ormUser): User
+    {
+        return $this->factory->create(
+            id: $ormUser->id,
+            name: $ormUser->name,
+            kind: $ormUser->kind,
+            documentType: $ormUser->document_type,
+            document: $ormUser->document,
+            email: $ormUser->email,
+            password: $ormUser->password
+        );
     }
 }

@@ -28,12 +28,12 @@ class CreateHandler
     {
 
         $user = $this->factory->create(
-            $command->getFullName(),
-            $command->getKind(),
-            $command->getDocumentType(),
-            $command->getDocument(),
-            $command->getEmail(),
-            $command->getPassword()
+            name: $command->getFullName(),
+            kind: $command->getKind(),
+            documentType: $command->getDocumentType(),
+            document: $command->getDocument(),
+            email: $command->getEmail(),
+            password: $command->getPassword()
         );
 
         $checkEmail = $this->repository->getOneOrNullByEmail($command->getEmail());

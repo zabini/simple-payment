@@ -10,7 +10,7 @@ class Common extends User
 {
 
     /** @inheritDoc */
-    public static function providesType(): UserKind
+    public static function providesKind(): UserKind
     {
         return UserKind::common;
     }

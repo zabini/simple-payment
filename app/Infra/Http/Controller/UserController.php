@@ -40,7 +40,7 @@ class UserController extends AbstractController
                 $request->input('kind'),
                 $request->input('document_type'),
                 $request->input('document'),
-                $request->input('mail'),
+                $request->input('email'),
                 $request->input('password'),
             )
         );
@@ -61,7 +61,7 @@ class UserController extends AbstractController
             'kind' => 'common',
             'document_type' => 'cpf',
             'document' => '62412188084',
-            'mail' => 'john@otherexample.com',
+            'email' => 'john@otherexample.com',
         ];
     }
 }

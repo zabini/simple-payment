@@ -48,4 +48,7 @@ test-filter:
 		docker-compose exec -ti simple-payment-api composer test -- --filter $(filter); \
 	fi
 
-dev: image up
+sleep:
+	@sleep 5
+
+dev: image up sleep migrate

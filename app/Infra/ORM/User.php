@@ -10,8 +10,8 @@ use Hyperf\DbConnection\Model\Model;
 
 /**
  * @property string $name
- * @property UserKind $kind
- * @property DocumentType $document_type
+ * @property string $kind
+ * @property string $document_type
  * @property string $document
  * @property string $email
  * @property string $password
@@ -34,13 +34,5 @@ class User extends Model
         'document',
         'email',
         'password'
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     */
-    protected array $casts = [
-        'kind' => UserKind::class,
-        'document_type' => DocumentType::class,
     ];
 }

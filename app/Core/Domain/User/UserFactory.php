@@ -16,8 +16,9 @@ final class UserFactory
      * @param string $kind
      * @param string $documentType
      * @param string $document
-     * @param string $mail
+     * @param string $email
      * @param string $password
+     * @param string|null $id
      * @return User
      */
     public function create(
@@ -25,18 +26,18 @@ final class UserFactory
         string $kind,
         string $documentType,
         string $document,
-        string $mail,
-        string $password
+        string $email,
+        string $password,
+        ?string $id = null,
     ): User {
         $typedDocument = DocumentType::tryFrom($documentType);
-
         if ($typedDocument === null) {
             throw InvalidUser::invalidDocumentType($documentType);
         }
 
         return match ($kind) {
-            UserKind::common->value => Common::create($name, $typedDocument, $document, $mail, $password),
-            UserKind::seller->value => Seller::create($name, $typedDocument, $document, $mail, $password),
+            UserKind::common->value => Common::make($id, $name, $typedDocument, $document, $email, $password),
+            UserKind::seller->value => Seller::make($id, $name, $typedDocument, $document, $email, $password),
             default => throw InvalidUser::invalidUserType($kind),
         };
     }

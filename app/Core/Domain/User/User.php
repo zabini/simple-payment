@@ -66,32 +66,6 @@ abstract class User
     }
 
     /**
-     * @param string $name
-     * @param DocumentType $documentType
-     * @param string $document
-     * @param string $email
-     * @param string $password
-     * @return self
-     */
-    public static function create(
-        string $name,
-        DocumentType $documentType,
-        string $document,
-        string $email,
-        string $password
-    ): self {
-        return new static(
-            Uuid::uuid4()->toString(),
-            $name,
-            static::providesType(),
-            $documentType,
-            $document,
-            $email,
-            $password
-        );
-    }
-
-    /**
      * @return boolean
      */
     abstract public function canTransfer(): bool;
@@ -99,5 +73,33 @@ abstract class User
     /**
      * @return UserKind
      */
-    abstract public static function providesType(): UserKind;
+    abstract public static function providesKind(): UserKind;
+
+    /**
+     * @param string|null $id
+     * @param string $name
+     * @param DocumentType $documentType
+     * @param string $document
+     * @param string $email
+     * @param string $password
+     * @return self
+     */
+    public static function make(
+        ?string $id,
+        string $name,
+        DocumentType $documentType,
+        string $document,
+        string $email,
+        string $password
+    ): self {
+        return new static(
+            $id ?? Uuid::uuid4()->toString(),
+            $name,
+            static::providesKind(),
+            $documentType,
+            $document,
+            $email,
+            $password
+        );
+    }
 }
