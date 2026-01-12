@@ -12,4 +12,10 @@ declare(strict_types=1);
 
 use Hyperf\HttpServer\Router\Router;
 
-Router::addRoute(['GET', 'POST', 'HEAD'], '/', 'App\Controller\IndexController@index');
+Router::addRoute(['GET', 'POST', 'HEAD'], '/', [App\Infra\Http\Controller\IndexController::class, 'index']);
+
+Router::post('/user', [App\Infra\Http\Controller\UserController::class, 'create']);
+Router::get(
+    '/user/{id:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}}',
+    [App\Infra\Http\Controller\UserController::class, 'fetchById']
+);

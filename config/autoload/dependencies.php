@@ -10,4 +10,5 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
+    \App\Core\Domain\Contracts\UserRepository::class => \App\Infra\Persistence\UserRepository::class
 ];

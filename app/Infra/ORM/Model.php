@@ -10,10 +10,8 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Model;
+namespace App\Infra\ORM;
 
 use Hyperf\DbConnection\Model\Model as BaseModel;
 
-abstract class Model extends BaseModel
-{
-}
+abstract class Model extends BaseModel {}
