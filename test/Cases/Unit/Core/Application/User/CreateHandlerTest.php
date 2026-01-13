@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace HyperfTest\Cases\User;
+namespace HyperfTest\Cases\Unit\Core\Application\User;
 
 use App\Core\Application\User\CreateCommand;
 use App\Core\Application\User\CreateHandler;
