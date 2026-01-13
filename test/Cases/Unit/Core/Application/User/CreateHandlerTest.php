@@ -17,8 +17,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \App\Core\Application\User\CreateHandler
  * @internal
- * @coversNothing
  */
 class CreateHandlerTest extends TestCase
 {

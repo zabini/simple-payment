@@ -6,8 +6,7 @@ namespace App\Core\Domain;
 
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
 use App\Core\Domain\Contracts\Enum\LedgerOperation;
-use DomainException;
-use InvalidArgumentException;
+use App\Core\Domain\Exceptions\InvalidOperation;
 use Ramsey\Uuid\Uuid;
 
 class Wallet
@@ -62,6 +61,11 @@ class Wallet
 
     public function deposit(float $amount): void
     {
+        $this->credit($amount);
+    }
+
+    public function credit(float $amount): void
+    {
         $this->guardAmount($amount);
 
         $this->appendEntry(
@@ -74,28 +78,21 @@ class Wallet
         );
     }
 
-    public function credit(float $amount): void
+    public function hasEnoughFunds(float $amount): bool
     {
         $this->guardAmount($amount);
 
         if ($amount > $this->balance) {
-            throw new DomainException('Insufficient balance to complete credit operation');
+            throw InvalidOperation::noEnoughFunds();
         }
 
-        $this->appendEntry(
-            LedgerEntry::create(
-                $this->id,
-                $amount,
-                LedgerEntryType::debit,
-                LedgerOperation::manual
-            )
-        );
+        return true;
     }
 
     private function guardAmount(float $amount): void
     {
         if ($amount <= 0) {
-            throw new InvalidArgumentException('Amount must be greater than zero');
+            throw InvalidOperation::zeroedAmount();
         }
     }
 

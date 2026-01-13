@@ -3,10 +3,10 @@ config:
   layout: dagre
 ---
 classDiagram
-
+    direction TB
     class UserKind {
-	    common
-	    seller
+        common
+        seller
     }
     <<enumeration>> UserKind
 
@@ -16,55 +16,74 @@ classDiagram
     class Common {
     }
 
-    class User <<abstract class>> {
-	    -String id
-	    -String name
-	    -UserKind kind
-	    -String document_type
-	    -String document
-	    -String mail
-	    -String password
-	    -Wallet wallet
-	    +canTransfer(): Boolean
+    class User {
+        -String id
+        -String name
+        -UserKind kind
+        -String document_type
+        -String document
+        -String mail
+        -String password
+        -Wallet wallet
+        +canTransfer() : Boolean
     }
 
-
-    class Wallet {
-	    -int id
-	    -String userId
-	    -float balance
-
-        +debit(float amount)
-        +credit(float amount)
+    class LedgerEntryType {
+        debit
+        credit
     }
+    <<enumeration>> LedgerEntryType
 
-    class Transaction {
-	    -int id
-	    -User payer
-        -User payee
-	    -float amount
+    class LedgerOperation {
+      manual
+      transfer
     }
-
-    class EntryKind {
-	    debit
-	    credit
-    }
-    <<enumeration>> EntryKind
+    <<enumeration>> LedgerOperation
 
     class LedgerEntry {
-	    -int id
-	    -Wallet wallet
+        -UUID id
+        -Wallet wallet
         -Transaction transaction
-        -EntryKind kind
+        -LedgerEntryType kind
+      -LedgerOperation operation
         -float amount
     }
+
+    class Wallet {
+        -UUID id
+        -String userId
+        -float balance
+        -List entries
+        +debit(Money amount)
+        +credit(Money amount)
+    }
+
+    class TransferStatus {
+        pending
+        authorized
+        settled
+        failed
+    }
+    <<enumeration>> TransferStatus
+
+    class Transfer {
+        -UUID id
+        -TransferStatus status
+        -User payer
+        -User payee
+        -float amount
+    }
+
+    <<enumeration>> TransferStatus
 
     User <|-- Seller
     User <|-- Common
     User --* UserKind : uses
-    LedgerEntry --* EntryKind : uses
-    User "1" *-- "1" Wallet
+    LedgerEntry --* LedgerEntryType : uses
+    LedgerEntry --* LedgerOperation : uses
+    Transfer --* TransferStatus : uses
+    User "1" *-- "0..*" Wallet
     Wallet "1" -- "0..*" LedgerEntry
-    Transaction "1" -- "2" LedgerEntry
-    User "1" -- "0..*" Transaction : payer
-    User "1" -- "0..*" Transaction : payee
+    Transfer "1" -- "1..*" LedgerEntry
+    Transfer "1" -- "1" User : payer
+    Transfer "1" -- "1" User : payee

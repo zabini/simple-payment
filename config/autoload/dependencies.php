@@ -1,7 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
 use App\Infra\Event\Publisher;
+use App\Infra\Persistence\TransferRepository;
 use App\Infra\Persistence\UserRepository;
 use App\Infra\Persistence\WalletRepository;
 
@@ -13,8 +15,10 @@ use App\Infra\Persistence\WalletRepository;
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
 return [
     App\Core\Domain\Contracts\UserRepository::class => UserRepository::class,
     App\Core\Domain\Contracts\WalletRepository::class => WalletRepository::class,
+    App\Core\Domain\Contracts\TransferRepository::class => TransferRepository::class,
     App\Core\Domain\Contracts\Event\Publisher::class => Publisher::class,
 ];

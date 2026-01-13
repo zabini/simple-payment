@@ -10,16 +10,16 @@ use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
 use App\Core\Domain\Contracts\UserRepository;
 use App\Core\Domain\Contracts\WalletRepository;
+use App\Core\Domain\Exceptions\InvalidOperation;
 use App\Core\Domain\User\UserFactory;
 use App\Core\Domain\Wallet;
-use InvalidArgumentException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \App\Core\Application\User\DepositHandler
  * @internal
- * @coversNothing
  */
 class DepositHandlerTest extends TestCase
 {
@@ -92,7 +92,7 @@ class DepositHandlerTest extends TestCase
 
         $handler = new DepositHandler($userRepository, $walletRepository);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidOperation::class);
         $this->expectExceptionMessage('Amount must be greater than zero');
 
         $handler->handle($command);

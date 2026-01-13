@@ -62,5 +62,10 @@ abstract class User
         return $this->wallet;
     }
 
+    public function cantTransfer(): bool
+    {
+        return ! $this->canTransfer();
+    }
+
     abstract public function canTransfer(): bool;
 }
