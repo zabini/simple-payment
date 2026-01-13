@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infra\Http\Controller;
 
-use App\Core\Application\User\CreateCommand;
+use App\Core\Application\User\Create;
 use App\Core\Application\User\CreateHandler;
-use App\Core\Application\User\FetchByIdCommand;
+use App\Core\Application\User\FetchById;
 use App\Core\Application\User\FetchByIdHandler;
 use App\Infra\Http\Request\User\Create as UserCreateRequest;
 use Hyperf\Di\Annotation\Inject;
@@ -26,7 +26,7 @@ class UserController extends AbstractController
     public function create(UserCreateRequest $request)
     {
         $id = $this->createHandler->handle(
-            new CreateCommand(
+            new Create(
                 $request->input('full_name'),
                 $request->input('kind'),
                 $request->input('document_type'),
@@ -44,7 +44,7 @@ class UserController extends AbstractController
     public function fetchById(string $id)
     {
         $user = $this->fetchByIdHandler->handle(
-            new FetchByIdCommand($id)
+            new FetchById($id)
         );
 
         return [

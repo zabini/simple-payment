@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Application\User;
 
-class CreateCommand
+class Create
 {
     public function __construct(
         private string $fullName,

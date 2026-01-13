@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HyperfTest\Cases\Unit\Core\Application\User;
 
-use App\Core\Application\User\FetchByIdCommand;
+use App\Core\Application\User\FetchById;
 use App\Core\Application\User\FetchByIdHandler;
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
@@ -28,7 +28,7 @@ class FetchByIdHandlerTest extends TestCase
     {
         $factory = new UserFactory();
         $repository = Mockery::mock(UserRepository::class);
-        $command = new FetchByIdCommand('user-123');
+        $command = new FetchById('user-123');
         $expectedUser = $this->makeUser($factory, 'user-123');
 
         $repository->shouldReceive('getOneById')
@@ -47,7 +47,7 @@ class FetchByIdHandlerTest extends TestCase
     public function testHandleThrowsWhenUserNotFound(): void
     {
         $repository = Mockery::mock(UserRepository::class);
-        $command = new FetchByIdCommand('missing-id');
+        $command = new FetchById('missing-id');
 
         $repository->shouldReceive('getOneById')
             ->once()

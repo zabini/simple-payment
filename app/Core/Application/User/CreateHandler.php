@@ -17,7 +17,7 @@ class CreateHandler
     ) {
     }
 
-    public function handle(CreateCommand $command): string
+    public function handle(Create $command): string
     {
         $user = $this->factory->create(
             fullName: $command->getFullName(),

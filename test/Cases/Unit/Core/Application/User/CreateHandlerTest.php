@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HyperfTest\Cases\Unit\Core\Application\User;
 
-use App\Core\Application\User\CreateCommand;
+use App\Core\Application\User\Create;
 use App\Core\Application\User\CreateHandler;
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
@@ -103,7 +103,7 @@ class CreateHandlerTest extends TestCase
         $handler->handle($command);
     }
 
-    private function createCommand(array $overrides = []): CreateCommand
+    private function createCommand(array $overrides = []): Create
     {
         $data = array_merge([
             'fullName' => 'John Doe',
@@ -114,7 +114,7 @@ class CreateHandlerTest extends TestCase
             'password' => 'strong-password',
         ], $overrides);
 
-        return new CreateCommand(
+        return new Create(
             $data['fullName'],
             $data['kind'],
             $data['documentType'],

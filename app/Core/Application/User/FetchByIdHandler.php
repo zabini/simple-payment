@@ -14,7 +14,7 @@ class FetchByIdHandler
     ) {
     }
 
-    public function handle(FetchByIdCommand $command): User
+    public function handle(FetchById $command): User
     {
         return $this->repository->getOneById($command->getId());
     }

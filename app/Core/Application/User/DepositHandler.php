@@ -18,7 +18,7 @@ class DepositHandler
     /**
      * @return string
      */
-    public function handle(DepositCommand $command): void
+    public function handle(Deposit $command): void
     {
         $wallet = $this->repository->getOneById($command->getUserId())
             ->getWallet();

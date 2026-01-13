@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infra\Http\Controller;
 
-use App\Core\Application\User\DepositCommand;
+use App\Core\Application\User\Deposit;
 use App\Core\Application\User\DepositHandler;
 use App\Infra\Http\Request\User\Deposit as UserDepositRequest;
 use Hyperf\Di\Annotation\Inject;
@@ -17,7 +17,7 @@ class DepositController extends AbstractController
     public function deposit(string $id, UserDepositRequest $request)
     {
         $this->depositHandler->handle(
-            new DepositCommand(
+            new Deposit(
                 $id,
                 $request->input('amount'),
             )

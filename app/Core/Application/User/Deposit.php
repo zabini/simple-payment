@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Application\User;
 
-class DepositCommand
+class Deposit
 {
     public function __construct(
         private string $userId,

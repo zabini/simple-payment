@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HyperfTest\Cases\Unit\Core\Application\User;
 
-use App\Core\Application\User\DepositCommand;
+use App\Core\Application\User\Deposit;
 use App\Core\Application\User\DepositHandler;
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
@@ -42,7 +42,7 @@ class DepositHandlerTest extends TestCase
 
         $userRepository = Mockery::mock(UserRepository::class);
         $walletRepository = Mockery::mock(WalletRepository::class);
-        $command = new DepositCommand('user-1', 5.0);
+        $command = new Deposit('user-1', 5.0);
         $savedWallet = null;
 
         $userRepository->shouldReceive('getOneById')
@@ -82,7 +82,7 @@ class DepositHandlerTest extends TestCase
 
         $userRepository = Mockery::mock(UserRepository::class);
         $walletRepository = Mockery::mock(WalletRepository::class);
-        $command = new DepositCommand('user-1', -5.0);
+        $command = new Deposit('user-1', -5.0);
 
         $userRepository->shouldReceive('getOneById')
             ->once()
