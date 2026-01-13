@@ -13,5 +13,19 @@ declare(strict_types=1);
 namespace App\Infra\ORM;
 
 use Hyperf\DbConnection\Model\Model as BaseModel;
+use Hyperf\Database\Model\Concerns\HasUuids;
 
-abstract class Model extends BaseModel {}
+abstract class Model extends BaseModel
+{
+    use HasUuids;
+
+    protected string $primaryKey = 'id';
+
+    public bool $incrementing = false;
+
+    protected string $keyType = 'string';
+
+    protected array $casts = [
+        'id' => 'string',
+    ];
+}

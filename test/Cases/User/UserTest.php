@@ -38,9 +38,4 @@ class UserTest extends TestCase
             'password' => 'strong-password',
         ], $overrides);
     }
-
-    public function testXyz()
-    {
-        $this->assertTrue(true);
-    }
 }

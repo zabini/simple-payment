@@ -7,7 +7,7 @@ namespace App\Infra\ORM;
 use Hyperf\DbConnection\Model\Model;
 
 /**
- * @property string $name
+ * @property string $full_name
  * @property string $kind
  * @property string $document_type
  * @property string $document
@@ -22,11 +22,18 @@ class User extends Model
     protected ?string $table = 'users';
 
     /**
+     * Cast attributes to native types.
+     */
+    protected array $casts = [
+        'id' => 'string',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      */
     protected array $fillable = [
         'id',
-        'name',
+        'full_name',
         'kind',
         'document_type',
         'document',

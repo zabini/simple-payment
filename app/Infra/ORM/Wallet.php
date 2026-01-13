@@ -24,6 +24,15 @@ class Wallet extends Model
     protected ?string $table = 'wallets';
 
     /**
+     * Cast attributes to native types.
+     */
+    protected array $casts = [
+        'id' => 'string',
+        'user_id' => 'string',
+        'balance' => 'float',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      */
     protected array $fillable = [

@@ -7,7 +7,6 @@ namespace App\Core\Application\User;
 use App\Core\Domain\Contracts\Event\Publisher;
 use App\Core\Domain\Contracts\UserRepository;
 use App\Core\Domain\User\User;
-use App\Core\Domain\User\Event\UserCreated;
 use App\Core\Domain\User\UserFactory;
 
 class CreateHandler
@@ -32,7 +31,7 @@ class CreateHandler
     {
 
         $user = $this->factory->create(
-            name: $command->getFullName(),
+            fullName: $command->getFullName(),
             kind: $command->getKind(),
             documentType: $command->getDocumentType(),
             document: $command->getDocument(),

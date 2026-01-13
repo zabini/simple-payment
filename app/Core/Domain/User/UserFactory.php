@@ -14,7 +14,7 @@ final class UserFactory
 {
 
     /**
-     * @param string $name
+     * @param string $fullName
      * @param string $kind
      * @param string $documentType
      * @param string $document
@@ -24,7 +24,7 @@ final class UserFactory
      * @return User
      */
     public function create(
-        string $name,
+        string $fullName,
         string $kind,
         string $documentType,
         string $document,
@@ -48,8 +48,8 @@ final class UserFactory
         }
 
         return match ($kind) {
-            UserKind::common->value => Common::make($id, $name, $typedDocument, $document, $email, $password, $wallet),
-            UserKind::seller->value => Seller::make($id, $name, $typedDocument, $document, $email, $password, $wallet),
+            UserKind::common->value => Common::make($id, $fullName, $typedDocument, $document, $email, $password, $wallet),
+            UserKind::seller->value => Seller::make($id, $fullName, $typedDocument, $document, $email, $password, $wallet),
             default => throw InvalidUser::invalidUserType($kind),
         };
     }

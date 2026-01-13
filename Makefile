@@ -48,6 +48,10 @@ test-filter:
 		docker-compose exec -ti simple-payment-api composer test -- --filter $(filter); \
 	fi
 
+coverage:
+	docker-compose exec -ti simple-payment-api composer test -- --coverage-html /opt/www/runtime/coverage
+	open ./runtime/coverage/index.html
+
 sleep:
 	@sleep 5
 

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Infra\Http\Controller;
 
-use App\Core\Domain\Contracts\Enum\UserKind;
-use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Application\User\CreateCommand;
 use App\Core\Application\User\CreateHandler;
+use App\Core\Application\User\FetchByIdHandler;
+use App\Core\Application\User\FetchByIdCommand;
 use App\Infra\Http\Request\User\Create as UserCreateRequest;
-use Laminas\Stdlib\ResponseInterface;
 use Hyperf\Di\Annotation\Inject;
+use Laminas\Stdlib\ResponseInterface;
 
 class UserController extends AbstractController
 {
-
-
 
     /**
      * @var CreateHandler
@@ -23,9 +21,11 @@ class UserController extends AbstractController
     #[Inject]
     private CreateHandler $createHandler;
 
-    // public function __construct(
-    //     private CreateHandler $userCreateHandler
-    // ) {}
+    /**
+     * @var FetchByIdHandler
+     */
+    #[Inject]
+    private FetchByIdHandler $fetchByIdHandler;
 
     /**
      * @param UserCreateRequest $request
@@ -55,13 +55,21 @@ class UserController extends AbstractController
      */
     public function fetchById(string $id)
     {
+
+        $user = $this->fetchByIdHandler->handle(
+            new FetchByIdCommand($id)
+        );
+
         return [
-            'id' =>  $id,
-            'full_name' => 'John Doe',
-            'kind' => 'common',
-            'document_type' => 'cpf',
-            'document' => '62412188084',
-            'email' => 'john@otherexample.com',
+            'id' =>  $user->getId(),
+            'full_name' => $user->getFullName(),
+            'kind' => $user->getKind(),
+            'document_type' => $user->getDocumentType(),
+            'document' => $user->getDocument(),
+            'email' => $user->getEmail(),
+            'wallet' => [
+                'balance' => $user->getWallet()->getBalance(),
+            ]
         ];
     }
 }

@@ -19,7 +19,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $ormUser = new ORMUser([
             'id' => $user->getId(),
-            'name' => $user->getName(),
+            'full_name' => $user->getFullName(),
             'kind' => $user->getKind(),
             'document_type' => $user->getDocumentType(),
             'document' => $user->getDocument(),
@@ -79,7 +79,7 @@ class UserRepository implements UserRepositoryInterface
     {
         return $this->factory->create(
             id: $ormUser->id,
-            name: $ormUser->name,
+            fullName: $ormUser->full_name,
             kind: $ormUser->kind,
             documentType: $ormUser->document_type,
             document: $ormUser->document,

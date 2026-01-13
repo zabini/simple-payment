@@ -8,10 +8,10 @@ class UserNotFound extends Exception
 {
 
     /**
-     * @param integer $id
+     * @param string $id
      * @return self
      */
-    public static function withId(int $id): self
+    public static function withId(string $id): self
     {
         return new self(
             sprintf('Provided user id (%s) was not found', $id)

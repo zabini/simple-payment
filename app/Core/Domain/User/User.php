@@ -14,7 +14,7 @@ abstract class User
 
     /**
      * @param string $id
-     * @param string $name
+     * @param string $fullName
      * @param UserKind $kind
      * @param DocumentType $documentType
      * @param string $document
@@ -24,7 +24,7 @@ abstract class User
      */
     protected function __construct(
         private string $id,
-        private string $name,
+        private string $fullName,
         private UserKind $kind,
         private DocumentType $documentType,
         private string $document,
@@ -38,9 +38,9 @@ abstract class User
         return $this->id;
     }
 
-    public function getName(): string
+    public function getFullName(): string
     {
-        return $this->name;
+        return $this->fullName;
     }
 
     public function getKind(): UserKind
@@ -88,7 +88,7 @@ abstract class User
 
     /**
      * @param string|null $id
-     * @param string $name
+     * @param string $fullName
      * @param DocumentType $documentType
      * @param string $document
      * @param string $email
@@ -97,7 +97,7 @@ abstract class User
      */
     public static function make(
         ?string $id,
-        string $name,
+        string $fullName,
         DocumentType $documentType,
         string $document,
         string $email,
@@ -106,7 +106,7 @@ abstract class User
     ): self {
         return new static(
             $id,
-            $name,
+            $fullName,
             static::providesKind(),
             $documentType,
             $document,
