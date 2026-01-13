@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\Application\User;
 
-use App\Core\Domain\Contracts\Event\Publisher;
 use App\Core\Domain\Contracts\UserRepository;
 use App\Core\Domain\User\User;
 use App\Core\Domain\User\UserFactory;
@@ -15,12 +14,10 @@ class CreateHandler
     /**
      * @param UserRepository $repository
      * @param UserFactory $factory
-     * @param Publisher $eventPublisher
      */
     public function __construct(
         private UserRepository $repository,
-        private UserFactory $factory,
-        private Publisher $eventPublisher
+        private UserFactory $factory
     ) {}
 
     /**
