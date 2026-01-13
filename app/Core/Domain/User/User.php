@@ -63,27 +63,4 @@ abstract class User
     }
 
     abstract public function canTransfer(): bool;
-
-    abstract public static function providesKind(): UserKind;
-
-    public static function make(
-        ?string $id,
-        string $fullName,
-        DocumentType $documentType,
-        string $document,
-        string $email,
-        string $password,
-        Wallet $wallet,
-    ): self {
-        return new static(
-            $id,
-            $fullName,
-            static::providesKind(),
-            $documentType,
-            $document,
-            $email,
-            $password,
-            $wallet
-        );
-    }
 }
