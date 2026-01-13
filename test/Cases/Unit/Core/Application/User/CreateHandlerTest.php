@@ -45,6 +45,8 @@ class CreateHandlerTest extends TestCase
 
         $result = $handler->handle($command);
 
+        assert($capturedUser instanceof User);
+
         $this->assertInstanceOf(User::class, $capturedUser);
         $this->assertSame($capturedUser->getId(), $result);
     }

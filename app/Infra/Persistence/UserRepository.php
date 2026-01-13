@@ -5,6 +5,9 @@ namespace App\Infra\Persistence;
 use App\Core\Domain\User\User;
 use App\Core\Domain\Contracts\UserRepository as UserRepositoryInterface;
 use App\Core\Domain\Exceptions\UserNotFound;
+use App\Core\Domain\Contracts\Enum\LedgerOperation;
+use App\Core\Domain\Contracts\Enum\LedgerEntryType;
+use App\Core\Domain\LedgerEntry;
 use App\Core\Domain\User\UserFactory;
 use App\Core\Domain\Wallet;
 use App\Infra\ORM\User as ORMUser;
@@ -32,7 +35,6 @@ class UserRepository implements UserRepositoryInterface
         $ormWallet = new ORMWallet([
             'id' => $user->getWallet()->getId(),
             'user_id' => $user->getWallet()->getUserId(),
-            'balance' => $user->getWallet()->getBalance(),
         ]);
 
         $ormWallet->save();
@@ -41,7 +43,9 @@ class UserRepository implements UserRepositoryInterface
     /** @inheritDoc */
     public function getOneById(string $id): User
     {
-        $ormUser = ORMUser::query()->find($id);
+        $ormUser = ORMUser::query()
+            ->with(['wallet.ledgerEntries'])
+            ->find($id);
         if (!$ormUser instanceof ORMUser) {
             throw UserNotFound::withId($id);
         }
@@ -52,7 +56,9 @@ class UserRepository implements UserRepositoryInterface
     /** @inheritDoc */
     public function getOneOrNullByEmail(string $email): ?User
     {
-        $ormUser = ORMUser::query()->where('email', $email)
+        $ormUser = ORMUser::query()
+            ->with(['wallet.ledgerEntries'])
+            ->where('email', $email)
             ->first();
 
         if (!$ormUser instanceof ORMUser) {
@@ -65,7 +71,10 @@ class UserRepository implements UserRepositoryInterface
     /** @inheritDoc */
     public function getOneOrNullByDocument(string $document): ?User
     {
-        $ormUser = ORMUser::query()->where('document', $document)->first();
+        $ormUser = ORMUser::query()
+            ->with(['wallet.ledgerEntries'])
+            ->where('document', $document)
+            ->first();
 
         if (!$ormUser instanceof ORMUser) {
             return null;
@@ -88,7 +97,15 @@ class UserRepository implements UserRepositoryInterface
             wallet: Wallet::create(
                 id: $ormUser->wallet->id,
                 userId: $ormUser->wallet->user_id,
-                balance: $ormUser->wallet->balance,
+                ledgerEntries: $ormUser->wallet->ledgerEntries
+                    ->map(fn($ledgerEntry) => LedgerEntry::create(
+                        walletId: $ledgerEntry->wallet_id,
+                        amount: $ledgerEntry->amount,
+                        type: LedgerEntryType::from($ledgerEntry->type),
+                        operation: LedgerOperation::from($ledgerEntry->operation),
+                        id: $ledgerEntry->id,
+                    ))
+                    ->all(),
             )
         );
     }

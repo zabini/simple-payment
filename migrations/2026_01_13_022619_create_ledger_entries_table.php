@@ -1,7 +1,7 @@
 <?php
 
-use Hyperf\Database\Schema\Schema;
 use Hyperf\Database\Schema\Blueprint;
+use Hyperf\Database\Schema\Schema;
 use Hyperf\Database\Migrations\Migration;
 
 return new class extends Migration
@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wallets', function (Blueprint $table) {
+        Schema::create('ledger_entries', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('user_id')->unique();
+            $table->uuid('wallet_id');
+            $table->float('amount');
+            $table->enum('type', ['credit', 'debit']);
+            $table->enum('operation', ['manual', 'transfer']);
             $table->datetimes();
 
-            $table->foreign('user_id')
+            $table->foreign('wallet_id')
                 ->references('id')
-                ->on('users');
+                ->on('wallets');
         });
     }
 
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wallets');
+        Schema::dropIfExists('ledger_entries');
     }
 };

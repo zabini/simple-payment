@@ -62,8 +62,7 @@ class UserFactoryTest extends TestCase
         $factory = new UserFactory();
         $wallet = Wallet::create(
             userId: 'provided-user-id',
-            id: 'wallet-123',
-            balance: 50.0
+            id: 'wallet-123'
         );
 
         $user = $factory->create(
@@ -80,7 +79,7 @@ class UserFactoryTest extends TestCase
         $this->assertSame('provided-user-id', $user->getId());
         $this->assertSame($wallet, $user->getWallet());
         $this->assertSame('wallet-123', $user->getWallet()->getId());
-        $this->assertSame(50.0, $user->getWallet()->getBalance());
+        $this->assertSame(0.0, $user->getWallet()->getBalance());
     }
 
     public function testThrowsForInvalidDocumentType(): void

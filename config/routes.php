@@ -15,7 +15,8 @@ use Hyperf\HttpServer\Router\Router;
 Router::addRoute(['GET', 'POST', 'HEAD'], '/', [App\Infra\Http\Controller\IndexController::class, 'index']);
 
 Router::post('/user', [App\Infra\Http\Controller\UserController::class, 'create']);
-Router::get(
-    '/user/{id:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}}',
-    [App\Infra\Http\Controller\UserController::class, 'fetchById']
-);
+
+Router::addGroup('/user/{id:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}}', function () {
+    Router::get('', [App\Infra\Http\Controller\UserController::class, 'fetchById']);
+    Router::post('/deposit', [App\Infra\Http\Controller\DepositController::class, 'deposit']);
+});

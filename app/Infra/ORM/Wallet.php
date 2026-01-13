@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infra\ORM;
 
-use App\Core\Domain\Contracts\Enum\DocumentType;
-use App\Core\Domain\Contracts\Enum\UserKind;
-use Hyperf\DbConnection\Model\Model;
+use Hyperf\Database\Model\Relations\HasMany;
 
 /**
  * @property string $name
@@ -29,7 +27,6 @@ class Wallet extends Model
     protected array $casts = [
         'id' => 'string',
         'user_id' => 'string',
-        'balance' => 'float',
     ];
 
     /**
@@ -38,6 +35,10 @@ class Wallet extends Model
     protected array $fillable = [
         'id',
         'user_id',
-        'balance',
     ];
+
+    public function ledgerEntries(): HasMany
+    {
+        return $this->hasMany(LedgerEntry::class, 'wallet_id', 'id');
+    }
 }

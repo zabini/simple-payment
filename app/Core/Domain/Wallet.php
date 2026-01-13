@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Core\Domain;
 
 use Ramsey\Uuid\Uuid;
+use App\Core\Domain\Contracts\Enum\LedgerOperation;
+use App\Core\Domain\Contracts\Enum\LedgerEntryType;
 
 class Wallet
 {
@@ -12,26 +14,30 @@ class Wallet
     /**
      * @param string $id
      * @param string $userId
-     * @param float $balance
+     * @param LedgerEntry[] $ledgerEntries
      */
     public function __construct(
         private string $id,
         private string $userId,
-        private float $balance = 0.0
-    ) {}
+        private array $ledgerEntries = []
+    ) {
+        $this->balance = $this->calculateBalance();
+    }
+
+    private float $balance = 0.0;
 
     /**
      * @param string $userId
      * @param string|null $id
-     * @param float $balance
+     * @param LedgerEntry[] $ledgerEntries
      * @return self
      */
-    public static function create(string $userId, ?string $id = null, float $balance = 0.0): self
+    public static function create(string $userId, ?string $id = null, array $ledgerEntries = []): self
     {
         return new self(
             $id ?? Uuid::uuid4()->toString(),
             $userId,
-            $balance
+            $ledgerEntries
         );
     }
 
@@ -50,11 +56,27 @@ class Wallet
         return $this->balance;
     }
 
+    /**
+     * @return LedgerEntry[]
+     */
+    public function getLedgerEntries(): array
+    {
+        return $this->ledgerEntries;
+    }
+
     public function deposit(float $amount): void
     {
         $this->guardAmount($amount);
 
-        $this->balance += $amount;
+        $this->appendEntry(
+            LedgerEntry::create(
+                $this->id,
+                $amount,
+                LedgerEntryType::credit,
+                LedgerOperation::manual
+            )
+        );
+
     }
 
     public function credit(float $amount): void
@@ -65,7 +87,14 @@ class Wallet
             throw new \DomainException('Insufficient balance to complete credit operation');
         }
 
-        $this->balance -= $amount;
+        $this->appendEntry(
+            LedgerEntry::create(
+                $this->id,
+                $amount,
+                LedgerEntryType::debit,
+                LedgerOperation::manual
+            )
+        );
     }
 
     private function guardAmount(float $amount): void
@@ -73,5 +102,25 @@ class Wallet
         if ($amount <= 0) {
             throw new \InvalidArgumentException('Amount must be greater than zero');
         }
+    }
+
+    private function appendEntry(LedgerEntry $entry): void
+    {
+        $this->ledgerEntries[] = $entry;
+        $this->balance = $this->calculateBalance();
+    }
+
+    private function calculateBalance(): float
+    {
+        $balance = 0.0;
+        foreach ($this->ledgerEntries as $entry) {
+            if (!$entry instanceof LedgerEntry) {
+                continue;
+            }
+
+            $balance += $entry->isCredit() ? $entry->getAmount() : -$entry->getAmount();
+        }
+
+        return $balance;
     }
 }
