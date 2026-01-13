@@ -8,14 +8,11 @@ use App\Core\Domain\Contracts\Enum\UserKind;
 
 class Seller extends User
 {
-
-    /** @inheritDoc */
     public static function providesKind(): UserKind
     {
         return UserKind::seller;
     }
 
-    /** @inheritDoc */
     public function canTransfer(): bool
     {
         return false;

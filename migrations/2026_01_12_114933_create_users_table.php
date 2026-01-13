@@ -1,11 +1,11 @@
 <?php
 
-use Hyperf\Database\Schema\Schema;
-use Hyperf\Database\Schema\Blueprint;
+declare(strict_types=1);
 use Hyperf\Database\Migrations\Migration;
+use Hyperf\Database\Schema\Blueprint;
+use Hyperf\Database\Schema\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('full_name');
             $table->enum('kind', [
                 'common',
-                'seller'
+                'seller',
             ]);
             $table->enum('document_type', [
                 'cpf',
-                'cnpj'
+                'cnpj',
             ]);
             $table->string('document', 32)->unique();
             $table->string('email')->unique();

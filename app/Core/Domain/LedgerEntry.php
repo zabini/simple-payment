@@ -4,26 +4,21 @@ declare(strict_types=1);
 
 namespace App\Core\Domain;
 
-use App\Core\Domain\Contracts\Enum\LedgerOperation;
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
+use App\Core\Domain\Contracts\Enum\LedgerOperation;
+use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 
 class LedgerEntry
 {
-    /**
-     * @param string $id
-     * @param string $walletId
-     * @param float $amount
-     * @param LedgerEntryType $type
-     * @param LedgerOperation $operation
-     */
     public function __construct(
         private string $id,
         private string $walletId,
         private float $amount,
         private LedgerEntryType $type,
         private LedgerOperation $operation
-    ) {}
+    ) {
+    }
 
     public static function create(
         string $walletId,
@@ -81,7 +76,7 @@ class LedgerEntry
     private static function guardAmount(float $amount): void
     {
         if ($amount <= 0) {
-            throw new \InvalidArgumentException('Amount must be greater than zero');
+            throw new InvalidArgumentException('Amount must be greater than zero');
         }
     }
 }

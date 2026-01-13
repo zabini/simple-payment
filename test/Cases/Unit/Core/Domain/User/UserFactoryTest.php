@@ -14,6 +14,10 @@ use App\Core\Domain\Wallet;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class UserFactoryTest extends TestCase
 {
     public function testCreatesCommonUserWithDefaults(): void

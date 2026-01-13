@@ -1,16 +1,20 @@
 <?php
 
 declare(strict_types=1);
-/**
+use App\Infra\Event\Publisher;
+use App\Infra\Persistence\UserRepository;
+use App\Infra\Persistence\WalletRepository;
+
+/*
  * This file is part of Hyperf.
  *
- * @link     https://www.hyperf.io
+ * @see     https://www.hyperf.io
  * @document https://hyperf.wiki
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    \App\Core\Domain\Contracts\UserRepository::class => \App\Infra\Persistence\UserRepository::class,
-    \App\Core\Domain\Contracts\WalletRepository::class => \App\Infra\Persistence\WalletRepository::class,
-    \App\Core\Domain\Contracts\Event\Publisher::class => \App\Infra\Event\Publisher::class,
+    App\Core\Domain\Contracts\UserRepository::class => UserRepository::class,
+    App\Core\Domain\Contracts\WalletRepository::class => WalletRepository::class,
+    App\Core\Domain\Contracts\Event\Publisher::class => Publisher::class,
 ];

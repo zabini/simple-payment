@@ -36,7 +36,7 @@ class User extends Model
         'document_type',
         'document',
         'email',
-        'password'
+        'password',
     ];
 
     public function wallet()

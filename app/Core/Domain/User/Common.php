@@ -8,14 +8,11 @@ use App\Core\Domain\Contracts\Enum\UserKind;
 
 class Common extends User
 {
-
-    /** @inheritDoc */
     public static function providesKind(): UserKind
     {
         return UserKind::common;
     }
 
-    /** @inheritDoc */
     public function canTransfer(): bool
     {
         return true;

@@ -10,12 +10,6 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 $header = <<<'EOF'
-This file is part of Hyperf.
-
-@link     https://www.hyperf.io
-@document https://hyperf.wiki
-@contact  group@hyperf.io
-@license  https://github.com/hyperf/hyperf/blob/master/LICENSE
 EOF;
 
 return (new PhpCsFixer\Config())
@@ -57,13 +51,14 @@ return (new PhpCsFixer\Config())
         ],
         'ordered_imports' => [
             'imports_order' => [
-                'class', 'function', 'const',
+                'class',
+                'function',
+                'const',
             ],
             'sort_algorithm' => 'alpha',
         ],
         'single_line_comment_style' => [
-            'comment_types' => [
-            ],
+            'comment_types' => [],
         ],
         'yoda_style' => [
             'always_move_variable' => false,

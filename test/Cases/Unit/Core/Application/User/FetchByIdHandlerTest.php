@@ -16,6 +16,10 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class FetchByIdHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;

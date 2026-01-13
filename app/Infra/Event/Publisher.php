@@ -10,11 +10,10 @@ use Hyperf\Event\EventDispatcher;
 
 final class Publisher implements DomainEventPublisher
 {
-    public function __construct(private EventDispatcher $dispatcher) {}
+    public function __construct(private EventDispatcher $dispatcher)
+    {
+    }
 
-    /**
-     * @param DomainEvent $event
-     */
     public function publish(DomainEvent $event): void
     {
         $this->dispatcher->dispatch($event);

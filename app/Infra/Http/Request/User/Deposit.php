@@ -8,16 +8,11 @@ use Hyperf\Validation\Request\FormRequest;
 
 class Deposit extends FormRequest
 {
-
-    /**
-     * @return boolean
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /** @inheritDoc */
     public function rules(): array
     {
         return [
@@ -25,7 +20,6 @@ class Deposit extends FormRequest
         ];
     }
 
-    /** @inheritDoc */
     public function messages(): array
     {
         return [

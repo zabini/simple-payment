@@ -1,15 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infra\Persistence;
 
-use App\Core\Domain\Wallet;
 use App\Core\Domain\Contracts\WalletRepository as WalletRepositoryInterface;
+use App\Core\Domain\Wallet;
 use App\Infra\ORM\LedgerEntry as ORMLedgerEntry;
 
 class WalletRepository implements WalletRepositoryInterface
 {
-
-    /** @inheritDoc */
     public function save(Wallet $wallet): void
     {
         foreach ($wallet->getLedgerEntries() as $ledgerEntry) {

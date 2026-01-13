@@ -6,15 +6,6 @@ namespace App\Core\Application\User;
 
 class CreateCommand
 {
-
-    /**
-     * @param string $fullName
-     * @param string $kind
-     * @param string $documentType
-     * @param string $document
-     * @param string $email
-     * @param string $password
-     */
     public function __construct(
         private string $fullName,
         private string $kind,
@@ -22,7 +13,8 @@ class CreateCommand
         private string $document,
         private string $email,
         private string $password
-    ) {}
+    ) {
+    }
 
     public function getFullName(): string
     {

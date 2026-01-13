@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Core\Domain;
 
-use Ramsey\Uuid\Uuid;
-use App\Core\Domain\Contracts\Enum\LedgerOperation;
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
+use App\Core\Domain\Contracts\Enum\LedgerOperation;
+use DomainException;
+use InvalidArgumentException;
+use Ramsey\Uuid\Uuid;
 
 class Wallet
 {
+    private float $balance = 0.0;
 
     /**
-     * @param string $id
-     * @param string $userId
      * @param LedgerEntry[] $ledgerEntries
      */
     public function __construct(
@@ -24,13 +25,8 @@ class Wallet
         $this->balance = $this->calculateBalance();
     }
 
-    private float $balance = 0.0;
-
     /**
-     * @param string $userId
-     * @param string|null $id
      * @param LedgerEntry[] $ledgerEntries
-     * @return self
      */
     public static function create(string $userId, ?string $id = null, array $ledgerEntries = []): self
     {
@@ -76,7 +72,6 @@ class Wallet
                 LedgerOperation::manual
             )
         );
-
     }
 
     public function credit(float $amount): void
@@ -84,7 +79,7 @@ class Wallet
         $this->guardAmount($amount);
 
         if ($amount > $this->balance) {
-            throw new \DomainException('Insufficient balance to complete credit operation');
+            throw new DomainException('Insufficient balance to complete credit operation');
         }
 
         $this->appendEntry(
@@ -100,7 +95,7 @@ class Wallet
     private function guardAmount(float $amount): void
     {
         if ($amount <= 0) {
-            throw new \InvalidArgumentException('Amount must be greater than zero');
+            throw new InvalidArgumentException('Amount must be greater than zero');
         }
     }
 
@@ -114,7 +109,7 @@ class Wallet
     {
         $balance = 0.0;
         foreach ($this->ledgerEntries as $entry) {
-            if (!$entry instanceof LedgerEntry) {
+            if (! $entry instanceof LedgerEntry) {
                 continue;
             }
 

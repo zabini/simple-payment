@@ -12,10 +12,15 @@ use App\Core\Domain\Contracts\UserRepository;
 use App\Core\Domain\Contracts\WalletRepository;
 use App\Core\Domain\User\UserFactory;
 use App\Core\Domain\Wallet;
+use InvalidArgumentException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class DepositHandlerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -87,7 +92,7 @@ class DepositHandlerTest extends TestCase
 
         $handler = new DepositHandler($userRepository, $walletRepository);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Amount must be greater than zero');
 
         $handler->handle($command);

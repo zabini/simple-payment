@@ -12,17 +12,6 @@ use Ramsey\Uuid\Uuid;
 
 final class UserFactory
 {
-
-    /**
-     * @param string $fullName
-     * @param string $kind
-     * @param string $documentType
-     * @param string $document
-     * @param string $email
-     * @param string $password
-     * @param string|null $id
-     * @return User
-     */
     public function create(
         string $fullName,
         string $kind,
@@ -33,7 +22,6 @@ final class UserFactory
         ?string $id = null,
         ?Wallet $wallet = null,
     ): User {
-
         $typedDocument = DocumentType::tryFrom($documentType);
         if ($typedDocument === null) {
             throw InvalidUser::invalidDocumentType($documentType);

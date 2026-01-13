@@ -8,16 +8,11 @@ use Hyperf\Validation\Request\FormRequest;
 
 class Create extends FormRequest
 {
-
-    /**
-     * @return boolean
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /** @inheritDoc */
     public function rules(): array
     {
         return [
@@ -30,7 +25,6 @@ class Create extends FormRequest
         ];
     }
 
-    /** @inheritDoc */
     public function messages(): array
     {
         return [

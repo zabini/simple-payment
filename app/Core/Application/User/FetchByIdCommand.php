@@ -6,11 +6,9 @@ namespace App\Core\Application\User;
 
 class FetchByIdCommand
 {
-
-    /**
-     * @param string $id
-     */
-    public function __construct(private string $id) {}
+    public function __construct(private string $id)
+    {
+    }
 
     public function getId(): string
     {

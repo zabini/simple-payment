@@ -9,18 +9,11 @@ use App\Core\Domain\User\User;
 
 class FetchByIdHandler
 {
-
-    /**
-     * @param UserRepository $repository
-     */
     public function __construct(
         private UserRepository $repository
-    ) {}
+    ) {
+    }
 
-    /**
-     * @param FetchByIdCommand $command
-     * @return User
-     */
     public function handle(FetchByIdCommand $command): User
     {
         return $this->repository->getOneById($command->getId());
