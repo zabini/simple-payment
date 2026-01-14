@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Exceptions;
 
-use Exception;
-
-class InvalidUser extends Exception
+class InvalidUser extends DomainException
 {
     public static function invalidUserType(string $type): self
     {

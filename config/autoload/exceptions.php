@@ -1,21 +1,16 @@
 <?php
 
 declare(strict_types=1);
+
 use App\Exception\Handler\AppExceptionHandler;
+use App\Infra\Http\Exception\Handler as DomainExceptionHandler;
 use Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler;
 use Hyperf\Validation\ValidationExceptionHandler;
 
-/*
- * This file is part of Hyperf.
- *
- * @see     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 return [
     'handler' => [
         'http' => [
+            DomainExceptionHandler::class,
             HttpExceptionHandler::class,
             ValidationExceptionHandler::class,
             AppExceptionHandler::class,

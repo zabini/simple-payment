@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Exceptions;
 
-use Exception;
-
-class InvalidOperation extends Exception
+class InvalidOperation extends DomainException
 {
     public static function sameUser(): self
     {
