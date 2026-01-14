@@ -12,12 +12,6 @@ use function Hyperf\Config\config;
 
 class Authorizer extends Client
 {
-    public function __construct()
-    {
-        parent::__construct(
-            (string) config('integration.authorizer.base_uri')
-        );
-    }
 
     public function requestAuthorization(string $payerId): bool
     {
@@ -31,6 +25,11 @@ class Authorizer extends Client
         } catch (Throwable $th) {
             throw $th;
         }
+    }
+
+    protected function baseUri(): string
+    {
+        return (string) config('integration.authorizer.base_uri');
     }
 
     protected function bindAuth(?array $options): array

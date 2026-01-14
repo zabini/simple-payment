@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Application\Wallet;
 
 use App\Core\Domain\Contracts\Event\Publisher;
-use App\Core\Domain\Contracts\ExternalAuthorizer;
+use App\Core\Domain\Contracts\TransferAuthorizer;
 use App\Core\Domain\Contracts\TransferRepository;
 use App\Core\Domain\Contracts\WalletRepository;
 use App\Core\Domain\Event\Transfer\Completed as CompletedTransfer;
@@ -21,7 +21,7 @@ class ProcessTransferHandler
     public function __construct(
         private TransferRepository $transferRepository,
         private WalletRepository $walletRepository,
-        private ExternalAuthorizer $externalAuthorizer
+        private TransferAuthorizer $transferAuthorizer
     ) {
     }
 
@@ -33,11 +33,11 @@ class ProcessTransferHandler
             throw InvalidOperation::unprocessableTransfer();
         }
 
-        $payerWallet = $this->walletRepository->getOneById($transfer->getPayerWalletId());
-        $payeeWallet = $this->walletRepository->getOneById($transfer->getPayeeWalletId());
+        $payerWallet = $transfer->getPayerWallet();
+        $payeeWallet = $transfer->getPayeeWallet();
 
         try {
-            $this->externalAuthorizer
+            $this->transferAuthorizer
                 ->authorize($payerWallet->getUserId());
         } catch (Throwable $exception) {
             $transfer->fail($exception->getMessage() ?: 'External authorization failed');

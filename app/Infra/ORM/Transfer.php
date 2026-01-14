@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infra\ORM;
 
+use Hyperf\Database\Model\Relations\BelongsTo;
+
 class Transfer extends Model
 {
     /**
@@ -32,4 +34,14 @@ class Transfer extends Model
         'status',
         'failed_reason',
     ];
+
+    public function payerWallet(): BelongsTo
+    {
+        return $this->belongsTo(Wallet::class, 'payer_wallet_id', 'id');
+    }
+
+    public function payeeWallet(): BelongsTo
+    {
+        return $this->belongsTo(Wallet::class, 'payee_wallet_id', 'id');
+    }
 }

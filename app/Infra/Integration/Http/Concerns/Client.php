@@ -15,20 +15,17 @@ use stdClass;
 
 abstract class Client
 {
-    /**
-     * @var HttpClient
-     */
-    private $http;
+
+    private HttpClient $http;
 
     public function __construct(
-        string $baseUri,
-        private ?array $extras = null,
-        private ?LoggerInterface $logger = null
+        private LoggerInterface $logger,
+        ?string $baseUri = null,
+        ?array $extras = null,
     ) {
-        $this->logger = $this->logger ?? new NullLogger();
 
         $options = [
-            'base_uri' => $baseUri,
+            'base_uri' => $baseUri ?? $this->baseUri(),
             'headers' => [
                 'accept' => 'application/json',
                 'content-type' => 'application/json',
@@ -62,6 +59,8 @@ abstract class Client
             return null;
         }
     }
+
+    abstract protected function baseUri(): string;
 
     abstract protected function bindAuth(?array $options): array;
 

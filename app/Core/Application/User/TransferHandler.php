@@ -39,9 +39,9 @@ class TransferHandler
         $payer->getWallet()->hasEnoughFunds($command->getAmount());
 
         $transfer = DomainTransfer::createPending(
-            $payer->getWallet()->getId(),
-            $payee->getWallet()->getId(),
-            $command->getAmount()
+            $payer->getWallet(),
+            $payee->getWallet(),
+            $command->getAmount(),
         );
 
         $this->transferRepository->save($transfer);

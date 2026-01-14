@@ -6,7 +6,7 @@ namespace App\Core\Domain;
 
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
 use App\Core\Domain\Contracts\Enum\LedgerOperation;
-use InvalidArgumentException;
+use App\Core\Domain\Exceptions\InvalidOperation;
 use Ramsey\Uuid\Uuid;
 
 class LedgerEntry
@@ -76,7 +76,7 @@ class LedgerEntry
     private static function guardAmount(float $amount): void
     {
         if ($amount <= 0) {
-            throw new InvalidArgumentException('Amount must be greater than zero');
+            throw InvalidOperation::zeroedAmount();
         }
     }
 }

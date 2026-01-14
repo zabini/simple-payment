@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infra\Integration\Http;
 
-use App\Core\Domain\Contracts\ExternalAuthorizer as AuthorizerInterface;
+use App\Core\Domain\Contracts\TransferAuthorizer as AuthorizerInterface;
 use App\Core\Domain\Exceptions\InvalidOperation;
 use App\Infra\Integration\Http\Client\Authorizer;
 
-class ExternalAuthorizer implements AuthorizerInterface
+class TransferAuthorizer implements AuthorizerInterface
 {
     public function __construct(
         private Authorizer $client

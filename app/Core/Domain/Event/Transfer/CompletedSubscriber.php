@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Event\Transfer;
 
+use App\Core\Application\Transfer\NotifyPayee;
+use App\Core\Application\Transfer\NotifyPayeeHandler;
 use App\Core\Domain\Contracts\Event\Subscriber;
 
 class CompletedSubscriber implements Subscriber
 {
-    public function __construct()
-    {
-    }
+    public function __construct(private NotifyPayeeHandler $notifyPayeeHandler) {}
 
     public function listen(): array
     {
@@ -23,6 +23,8 @@ class CompletedSubscriber implements Subscriber
     {
         assert($event instanceof Completed);
 
-        echo 'Sent Completed Transfer Notification for Transfer ID: ' . $event->getTransferId();
+        $this->notifyPayeeHandler->handle(
+            new NotifyPayee($event->getTransferId())
+        );
     }
 }

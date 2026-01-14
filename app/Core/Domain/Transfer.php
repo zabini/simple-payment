@@ -5,33 +5,33 @@ declare(strict_types=1);
 namespace App\Core\Domain;
 
 use App\Core\Domain\Contracts\Enum\TransferStatus;
-use InvalidArgumentException;
+use App\Core\Domain\Exceptions\InvalidOperation;
 use Ramsey\Uuid\Uuid;
 
 class Transfer
 {
     public function __construct(
         private string $id,
-        private string $payerWalletId,
-        private string $payeeWalletId,
+        private Wallet $payerWallet,
+        private Wallet $payeeWallet,
         private float $amount,
         private TransferStatus $status,
-        private ?string $failedReason = null
+        private ?string $failedReason = null,
     ) {
     }
 
     public static function createPending(
-        string $payerWalletId,
-        string $payeeWalletId,
+        Wallet $payerWallet,
+        Wallet $payeeWallet,
         float $amount,
-        ?string $id = null
+        ?string $id = null,
     ): self {
         self::guardAmount($amount);
 
         return new self(
             $id ?? Uuid::uuid4()->toString(),
-            $payerWalletId,
-            $payeeWalletId,
+            $payerWallet,
+            $payeeWallet,
             $amount,
             TransferStatus::pending,
         );
@@ -42,14 +42,14 @@ class Transfer
         return $this->id;
     }
 
-    public function getPayerWalletId(): string
+    public function getPayerWallet(): Wallet
     {
-        return $this->payerWalletId;
+        return $this->payerWallet;
     }
 
-    public function getPayeeWalletId(): string
+    public function getPayeeWallet(): Wallet
     {
-        return $this->payeeWalletId;
+        return $this->payeeWallet;
     }
 
     public function getAmount(): float
@@ -87,7 +87,7 @@ class Transfer
     private static function guardAmount(float $amount): void
     {
         if ($amount <= 0) {
-            throw new InvalidArgumentException('Amount must be greater than zero');
+            throw InvalidOperation::zeroedAmount();
         }
     }
 }

@@ -13,24 +13,23 @@ use function Hyperf\Config\config;
 
 class Notifier extends Client
 {
-    public function __construct()
-    {
-        parent::__construct(
-            (string) config('integration.notifier.base_uri')
-        );
-    }
 
-    public function notify(string $payerId): stdClass
+    public function requestNotication(string $userId): void
     {
         try {
             $this->request('POST', 'api/v1/notify', [
-                'query' => [
-                    'payer' => $payerId,
+                'json' => [
+                    'payer' => $userId,
                 ],
             ]);
         } catch (ClientException $exception) {
             throw $exception;
         }
+    }
+
+    protected function baseUri(): string
+    {
+        return (string) config('integration.notifier.base_uri');
     }
 
     protected function bindAuth(?array $options): array

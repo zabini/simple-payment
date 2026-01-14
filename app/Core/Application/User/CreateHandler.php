@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Core\Application\User;
 
 use App\Core\Domain\Contracts\UserRepository;
+use App\Core\Domain\Exceptions\InvalidUser;
 use App\Core\Domain\User\User;
 use App\Core\Domain\User\UserFactory;
-use DomainException;
 
 class CreateHandler
 {
@@ -30,12 +30,12 @@ class CreateHandler
 
         $checkEmail = $this->repository->getOneOrNullByEmail($command->getEmail());
         if ($checkEmail instanceof User) {
-            throw new DomainException('Email already in use');
+            throw InvalidUser::emailAlreadyTaken($command->getEmail());
         }
 
         $checkDocument = $this->repository->getOneOrNullByDocument($command->getDocument());
         if ($checkDocument instanceof User) {
-            throw new DomainException('Document already in use');
+            throw InvalidUser::documentInUse($command->getDocument());
         }
 
         $this->repository->save($user);

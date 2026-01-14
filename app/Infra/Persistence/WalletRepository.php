@@ -7,11 +7,11 @@ namespace App\Infra\Persistence;
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
 use App\Core\Domain\Contracts\Enum\LedgerOperation;
 use App\Core\Domain\Contracts\WalletRepository as WalletRepositoryInterface;
+use App\Core\Domain\Exceptions\NotFound;
 use App\Core\Domain\LedgerEntry;
 use App\Core\Domain\Wallet;
 use App\Infra\ORM\LedgerEntry as ORMLedgerEntry;
 use App\Infra\ORM\Wallet as ORMWallet;
-use Exception;
 
 class WalletRepository implements WalletRepositoryInterface
 {
@@ -41,7 +41,7 @@ class WalletRepository implements WalletRepositoryInterface
             ->find($id);
 
         if (! $ormWallet instanceof ORMWallet) {
-            throw new Exception("Wallet with id {$id} not found");
+            throw NotFound::entityWithId('wallet', $id);
         }
 
         return Wallet::create(

@@ -7,7 +7,7 @@ namespace App\Infra\Persistence;
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
 use App\Core\Domain\Contracts\Enum\LedgerOperation;
 use App\Core\Domain\Contracts\UserRepository as UserRepositoryInterface;
-use App\Core\Domain\Exceptions\UserNotFound;
+use App\Core\Domain\Exceptions\NotFound;
 use App\Core\Domain\LedgerEntry;
 use App\Core\Domain\User\User;
 use App\Core\Domain\User\UserFactory;
@@ -49,7 +49,7 @@ class UserRepository implements UserRepositoryInterface
             ->with(['wallet.ledgerEntries'])
             ->find($id);
         if (! $ormUser instanceof ORMUser) {
-            throw UserNotFound::withId($id);
+            throw NotFound::entityWithId('user', $id);
         }
 
         return $this->rebuild($ormUser);
