@@ -14,20 +14,20 @@ return new class extends Migration {
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('payer_id');
-            $table->uuid('payee_id');
+            $table->uuid('payer_wallet_id');
+            $table->uuid('payee_wallet_id');
             $table->float('amount');
             $table->enum('status', ['pending', 'completed', 'failed', 'reverted']);
             $table->text('failed_reason')->nullable();
             $table->datetimes();
 
-            $table->foreign('payer_id')
+            $table->foreign('payer_wallet_id')
                 ->references('id')
-                ->on('users');
+                ->on('wallets');
 
-            $table->foreign('payee_id')
+            $table->foreign('payee_wallet_id')
                 ->references('id')
-                ->on('users');
+                ->on('wallets');
         });
     }
 

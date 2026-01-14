@@ -16,8 +16,8 @@ class Transfer extends Model
      */
     protected array $casts = [
         'id' => 'string',
-        'payer_id' => 'string',
-        'payee_id' => 'string',
+        'payer_wallet_id' => 'string',
+        'payee_wallet_id' => 'string',
         'amount' => 'float',
     ];
 
@@ -26,8 +26,8 @@ class Transfer extends Model
      */
     protected array $fillable = [
         'id',
-        'payer_id',
-        'payee_id',
+        'payer_wallet_id',
+        'payee_wallet_id',
         'amount',
         'status',
         'failed_reason',

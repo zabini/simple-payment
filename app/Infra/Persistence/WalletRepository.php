@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace App\Infra\Persistence;
 
+use App\Core\Domain\Contracts\Enum\LedgerEntryType;
+use App\Core\Domain\Contracts\Enum\LedgerOperation;
 use App\Core\Domain\Contracts\WalletRepository as WalletRepositoryInterface;
+use App\Core\Domain\LedgerEntry;
 use App\Core\Domain\Wallet;
 use App\Infra\ORM\LedgerEntry as ORMLedgerEntry;
+use App\Infra\ORM\Wallet as ORMWallet;
+use Exception;
 
 class WalletRepository implements WalletRepositoryInterface
 {
@@ -27,5 +32,30 @@ class WalletRepository implements WalletRepositoryInterface
 
             $ormLedgerEntry->save();
         }
+    }
+
+    public function getOneById(string $id): Wallet
+    {
+        $ormWallet = ORMWallet::query()
+            ->with('ledgerEntries')
+            ->find($id);
+
+        if (! $ormWallet instanceof ORMWallet) {
+            throw new Exception("Wallet with id {$id} not found");
+        }
+
+        return Wallet::create(
+            id: $ormWallet->id,
+            userId: $ormWallet->user_id,
+            ledgerEntries: $ormWallet->ledgerEntries
+                ->map(fn ($ledgerEntry) => LedgerEntry::create(
+                    walletId: $ledgerEntry->wallet_id,
+                    amount: $ledgerEntry->amount,
+                    type: LedgerEntryType::from($ledgerEntry->type),
+                    operation: LedgerOperation::from($ledgerEntry->operation),
+                    id: $ledgerEntry->id,
+                ))
+                ->all(),
+        );
     }
 }

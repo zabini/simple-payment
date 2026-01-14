@@ -35,4 +35,11 @@ class InvalidOperation extends Exception
             sprintf('No enough funds')
         );
     }
+
+    public static function unprocessableTransfer(): self
+    {
+        return new self(
+            sprintf('Transfer is not processable')
+        );
+    }
 }

@@ -89,6 +89,29 @@ class Wallet
         return true;
     }
 
+    public function transferTo(self $payeeWallet, float $amount): void
+    {
+        $this->hasEnoughFunds($amount);
+
+        $this->appendEntry(
+            LedgerEntry::create(
+                $this->id,
+                $amount,
+                LedgerEntryType::debit,
+                LedgerOperation::transfer
+            )
+        );
+
+        $payeeWallet->appendEntry(
+            LedgerEntry::create(
+                $payeeWallet->id,
+                $amount,
+                LedgerEntryType::credit,
+                LedgerOperation::transfer
+            )
+        );
+    }
+
     private function guardAmount(float $amount): void
     {
         if ($amount <= 0) {

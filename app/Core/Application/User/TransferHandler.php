@@ -25,7 +25,7 @@ class TransferHandler
         $payer = $this->userRepository->getOneById($command->getPayerId());
         $payee = $this->userRepository->getOneById($command->getPayeeId());
 
-        if ($payer->getId() === $payee->getId()) {
+        if ($payer->getWallet()->getId() === $payee->getWallet()->getId()) {
             throw InvalidOperation::sameUser();
         }
 
@@ -36,15 +36,13 @@ class TransferHandler
         $payer->getWallet()->hasEnoughFunds($command->getAmount());
 
         $transfer = DomainTransfer::createPending(
-            $payer->getId(),
-            $payee->getId(),
+            $payer->getWallet()->getId(),
+            $payee->getWallet()->getId(),
             $command->getAmount()
         );
 
         $this->transferRepository->save($transfer);
         $this->publisher->publish(new PendingTransferCreated($transfer->getId()));
-
-        var_dump($transfer->getId());
 
         return $transfer->getId();
     }

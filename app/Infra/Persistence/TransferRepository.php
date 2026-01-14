@@ -17,8 +17,8 @@ class TransferRepository implements TransferRepositoryInterface
         ORMTransfer::query()->updateOrCreate(
             ['id' => $transfer->getId()],
             [
-                'payer_id' => $transfer->getPayerId(),
-                'payee_id' => $transfer->getPayeeId(),
+                'payer_wallet_id' => $transfer->getPayerWalletId(),
+                'payee_wallet_id' => $transfer->getPayeeWalletId(),
                 'amount' => $transfer->getAmount(),
                 'status' => $transfer->getStatus()->value,
                 'failed_reason' => $transfer->getFailedReason(),
@@ -35,8 +35,8 @@ class TransferRepository implements TransferRepositoryInterface
 
         return new Transfer(
             $ormTransfer->id,
-            $ormTransfer->payer_id,
-            $ormTransfer->payee_id,
+            $ormTransfer->payer_wallet_id,
+            $ormTransfer->payee_wallet_id,
             $ormTransfer->amount,
             TransferStatus::from($ormTransfer->status),
             $ormTransfer->failed_reason

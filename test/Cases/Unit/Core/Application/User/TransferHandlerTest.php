@@ -35,7 +35,7 @@ class TransferHandlerTest extends TestCase
         $transferRepository = Mockery::mock(TransferRepository::class);
         $publisher = Mockery::mock(Publisher::class);
 
-        $payerWallet = Wallet::create('payer-1');
+        $payerWallet = Wallet::create('payer-1', 'payer-wallet-1');
         $payerWallet->deposit(100);
         $payer = Common::make(
             'payer-1',
@@ -47,7 +47,7 @@ class TransferHandlerTest extends TestCase
             $payerWallet
         );
 
-        $payeeWallet = Wallet::create('payee-1');
+        $payeeWallet = Wallet::create('payee-1', 'payee-wallet-1');
         $payee = Seller::make(
             'payee-1',
             'Payee Name',
@@ -80,8 +80,8 @@ class TransferHandlerTest extends TestCase
                 $capturedTransfer = $transfer;
 
                 return $transfer->getStatus() === TransferStatus::pending
-                    && $transfer->getPayerId() === 'payer-1'
-                    && $transfer->getPayeeId() === 'payee-1'
+                    && $transfer->getPayerWalletId() === 'payer-wallet-1'
+                    && $transfer->getPayeeWalletId() === 'payee-wallet-1'
                     && $transfer->getAmount() === 50.0;
             }))
             ->andReturnNull();

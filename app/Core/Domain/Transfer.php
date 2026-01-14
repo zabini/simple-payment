@@ -12,8 +12,8 @@ class Transfer
 {
     public function __construct(
         private string $id,
-        private string $payerId,
-        private string $payeeId,
+        private string $payerWalletId,
+        private string $payeeWalletId,
         private float $amount,
         private TransferStatus $status,
         private ?string $failedReason = null
@@ -21,8 +21,8 @@ class Transfer
     }
 
     public static function createPending(
-        string $payerId,
-        string $payeeId,
+        string $payerWalletId,
+        string $payeeWalletId,
         float $amount,
         ?string $id = null
     ): self {
@@ -30,8 +30,8 @@ class Transfer
 
         return new self(
             $id ?? Uuid::uuid4()->toString(),
-            $payerId,
-            $payeeId,
+            $payerWalletId,
+            $payeeWalletId,
             $amount,
             TransferStatus::pending,
         );
@@ -42,14 +42,14 @@ class Transfer
         return $this->id;
     }
 
-    public function getPayerId(): string
+    public function getPayerWalletId(): string
     {
-        return $this->payerId;
+        return $this->payerWalletId;
     }
 
-    public function getPayeeId(): string
+    public function getPayeeWalletId(): string
     {
-        return $this->payeeId;
+        return $this->payeeWalletId;
     }
 
     public function getAmount(): float
@@ -65,6 +65,23 @@ class Transfer
     public function getFailedReason(): ?string
     {
         return $this->failedReason;
+    }
+
+    public function complete(): void
+    {
+        $this->status = TransferStatus::completed;
+        $this->failedReason = null;
+    }
+
+    public function fail(string $reason): void
+    {
+        $this->status = TransferStatus::failed;
+        $this->failedReason = $reason;
+    }
+
+    public function isntProcessable(): bool
+    {
+        return $this->getStatus() !== TransferStatus::pending;
     }
 
     private static function guardAmount(float $amount): void

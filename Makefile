@@ -52,6 +52,12 @@ coverage:
 	docker-compose exec -ti simple-payment-api composer test -- --coverage-html /opt/www/runtime/coverage
 	open ./runtime/coverage/index.html
 
+fix:
+	docker-compose exec -ti simple-payment-api composer cs-fix
+
+analyse:
+	docker-compose exec -ti simple-payment-api composer analyse
+
 sleep:
 	@sleep 5
 

@@ -9,4 +9,6 @@ use App\Core\Domain\Wallet;
 interface WalletRepository
 {
     public function save(Wallet $wallet): void;
+
+    public function getOneById(string $id): Wallet;
 }
