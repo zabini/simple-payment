@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->uuid('payer_id');
             $table->uuid('payee_id');
             $table->float('amount');
-            $table->enum('status', ['pending', 'completed', 'failed']);
+            $table->enum('status', ['pending', 'completed', 'failed', 'reverted']);
             $table->text('failed_reason')->nullable();
             $table->datetimes();
 

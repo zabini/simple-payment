@@ -9,4 +9,5 @@ enum TransferStatus: string
     case pending = 'pending';
     case completed = 'completed';
     case failed = 'failed';
+    case reverted = 'reverted';
 }
