@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 use Hyperf\Contract\StdoutLoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -20,6 +21,14 @@ return [
             LogLevel::INFO,
             LogLevel::NOTICE,
             LogLevel::WARNING,
+        ],
+    ],
+    'integration' => [
+        'authorizer' => [
+            'base_uri' => env('AUTHORIZER_BASE_URI', 'https://util.devi.tools/api'),
+        ],
+        'notifier' => [
+            'base_uri' => env('NOTIFIER_BASE_URI', 'https://util.devi.tools/api'),
         ],
     ],
 ];

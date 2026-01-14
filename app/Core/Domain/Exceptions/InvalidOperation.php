@@ -42,4 +42,18 @@ class InvalidOperation extends Exception
             sprintf('Transfer is not processable')
         );
     }
+
+    public static function fromExternalReason(string $reason): self
+    {
+        return new self(
+            sprintf('Transfer denied for reason: %s', $reason)
+        );
+    }
+
+    public static function unmappedReason(string $reason): self
+    {
+        return new self(
+            sprintf('Transfer denied for reason: %s', $reason)
+        );
+    }
 }
