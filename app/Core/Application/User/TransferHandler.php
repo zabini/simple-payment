@@ -10,13 +10,16 @@ use App\Core\Domain\Contracts\UserRepository;
 use App\Core\Domain\Event\Transfer\PendingCreated as PendingTransferCreated;
 use App\Core\Domain\Exceptions\InvalidOperation;
 use App\Core\Domain\Transfer as DomainTransfer;
+use Hyperf\Di\Annotation\Inject;
 
 class TransferHandler
 {
+    #[Inject(lazy: true)]
+    private Publisher $publisher;
+
     public function __construct(
         private UserRepository $userRepository,
         private TransferRepository $transferRepository,
-        private Publisher $publisher
     ) {
     }
 

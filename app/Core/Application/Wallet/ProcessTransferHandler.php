@@ -10,15 +10,18 @@ use App\Core\Domain\Contracts\TransferRepository;
 use App\Core\Domain\Contracts\WalletRepository;
 use App\Core\Domain\Event\Transfer\Completed as CompletedTransfer;
 use App\Core\Domain\Exceptions\InvalidOperation;
+use Hyperf\Di\Annotation\Inject;
 use Throwable;
 
 class ProcessTransferHandler
 {
+    #[Inject(lazy: true)]
+    private Publisher $publisher;
+
     public function __construct(
         private TransferRepository $transferRepository,
         private WalletRepository $walletRepository,
-        private ExternalAuthorizer $externalAuthorizer,
-        private Publisher $publisher,
+        private ExternalAuthorizer $externalAuthorizer
     ) {
     }
 

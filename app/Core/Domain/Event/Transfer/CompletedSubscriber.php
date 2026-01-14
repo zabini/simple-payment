@@ -8,7 +8,9 @@ use App\Core\Domain\Contracts\Event\Subscriber;
 
 class CompletedSubscriber implements Subscriber
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function listen(): array
     {
