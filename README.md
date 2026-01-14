@@ -9,8 +9,8 @@
 
 - Criar DTOs pra retornar os dados aos usuários
 - link transfer o Ledger Entries
-- Autorizador externo
 - Notificar recebedor
+- Tratar exceções de domínio e validações para retornar um json estruturado 
 
 ## Problema
 - considerar as transferencias pendentes de confirmação na hora de criar a transação.

@@ -7,7 +7,7 @@ namespace App\Core\Application\User;
 use App\Core\Domain\Contracts\Event\Publisher;
 use App\Core\Domain\Contracts\TransferRepository;
 use App\Core\Domain\Contracts\UserRepository;
-use App\Core\Domain\Event\PendingTransferCreated;
+use App\Core\Domain\Event\Transfer\PendingCreated as PendingTransferCreated;
 use App\Core\Domain\Exceptions\InvalidOperation;
 use App\Core\Domain\Transfer as DomainTransfer;
 
@@ -42,7 +42,9 @@ class TransferHandler
         );
 
         $this->transferRepository->save($transfer);
-        $this->publisher->publish(new PendingTransferCreated($transfer->getId()));
+        $this->publisher->publish(
+            new PendingTransferCreated($transfer->getId())
+        );
 
         return $transfer->getId();
     }

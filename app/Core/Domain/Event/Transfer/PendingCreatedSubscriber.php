@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Domain\Event;
+namespace App\Core\Domain\Event\Transfer;
 
 use App\Core\Application\Wallet\ProcessTransfer;
 use App\Core\Application\Wallet\ProcessTransferHandler;
 use App\Core\Domain\Contracts\Event\Subscriber;
 
-class PendingTransferCreatedSubscriber implements Subscriber
+class PendingCreatedSubscriber implements Subscriber
 {
     public function __construct(private ProcessTransferHandler $processTransferHandler)
     {
@@ -17,13 +17,13 @@ class PendingTransferCreatedSubscriber implements Subscriber
     public function listen(): array
     {
         return [
-            PendingTransferCreated::class,
+            PendingCreated::class,
         ];
     }
 
     public function process(object $event): void
     {
-        assert($event instanceof PendingTransferCreated);
+        assert($event instanceof PendingCreated);
 
         $this->processTransferHandler->handle(
             new ProcessTransfer($event->getTransferId())

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Core\Application\Wallet;
 
+use App\Core\Domain\Contracts\Event\Publisher;
 use App\Core\Domain\Contracts\ExternalAuthorizer;
 use App\Core\Domain\Contracts\TransferRepository;
 use App\Core\Domain\Contracts\WalletRepository;
+use App\Core\Domain\Event\Transfer\Completed as CompletedTransfer;
 use App\Core\Domain\Exceptions\InvalidOperation;
 use Throwable;
 
@@ -16,6 +18,7 @@ class ProcessTransferHandler
         private TransferRepository $transferRepository,
         private WalletRepository $walletRepository,
         private ExternalAuthorizer $externalAuthorizer,
+        private Publisher $publisher,
     ) {
     }
 
@@ -47,5 +50,9 @@ class ProcessTransferHandler
         $transfer->complete();
 
         $this->transferRepository->save($transfer);
+
+        $this->publisher->publish(
+            new CompletedTransfer($transfer->getId())
+        );
     }
 }

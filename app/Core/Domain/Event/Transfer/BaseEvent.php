@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Domain\Event;
+namespace App\Core\Domain\Event\Transfer;
 
 use App\Core\Domain\Contracts\Event\Event;
 
-class PendingTransferCreated implements Event
+class BaseEvent implements Event
 {
     public function __construct(private string $transferId)
     {

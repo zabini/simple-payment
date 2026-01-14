@@ -6,6 +6,11 @@ namespace App\Infra\Integration\Http\Concerns;
 
 use Exception;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use stdClass;
 
 abstract class Client
@@ -17,8 +22,11 @@ abstract class Client
 
     public function __construct(
         string $baseUri,
-        private ?array $extras = null
+        private ?array $extras = null,
+        private ?LoggerInterface $logger = null
     ) {
+        $this->logger = $this->logger ?? new NullLogger();
+
         $options = [
             'base_uri' => $baseUri,
             'headers' => [
@@ -61,6 +69,19 @@ abstract class Client
 
     private function bindLogHandler(array $options): array
     {
+        $handlerStack = $options['handler'] ?? HandlerStack::create();
+
+        if (! $handlerStack instanceof HandlerStack) {
+            $handlerStack = HandlerStack::create($handlerStack);
+        }
+
+        $handlerStack->push(Middleware::log(
+            $this->logger,
+            new MessageFormatter(MessageFormatter::DEBUG)
+        ));
+
+        $options['handler'] = $handlerStack;
+
         return $options;
     }
 }
