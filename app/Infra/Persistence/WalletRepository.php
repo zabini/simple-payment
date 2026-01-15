@@ -30,6 +30,7 @@ class WalletRepository implements WalletRepositoryInterface
                 'amount' => $ledgerEntry->getAmount(),
                 'type' => $ledgerEntry->getType()->value,
                 'operation' => $ledgerEntry->getOperation()->value,
+                'transfer_id' => $ledgerEntry->getTransferId(),
             ]);
 
             $ormLedgerEntry->save();
@@ -57,6 +58,7 @@ class WalletRepository implements WalletRepositoryInterface
                     type: LedgerEntryType::from($ledgerEntry->type),
                     operation: LedgerOperation::from($ledgerEntry->operation),
                     id: $ledgerEntry->id,
+                    transferId: $ledgerEntry->transfer_id
                 ))
                 ->all(),
         );

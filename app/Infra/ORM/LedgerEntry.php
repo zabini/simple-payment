@@ -18,6 +18,7 @@ class LedgerEntry extends Model
         'id' => 'string',
         'wallet_id' => 'string',
         'amount' => 'float',
+        'transfer_id' => 'string',
     ];
 
     /**
@@ -29,5 +30,6 @@ class LedgerEntry extends Model
         'amount',
         'type',
         'operation',
+        'transfer_id',
     ];
 }

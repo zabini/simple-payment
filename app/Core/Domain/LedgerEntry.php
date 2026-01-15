@@ -16,7 +16,8 @@ class LedgerEntry
         private string $walletId,
         private float $amount,
         private LedgerEntryType $type,
-        private LedgerOperation $operation
+        private LedgerOperation $operation,
+        private ?string $transferId = null
     ) {
     }
 
@@ -25,7 +26,8 @@ class LedgerEntry
         float $amount,
         LedgerEntryType $type,
         LedgerOperation $operation,
-        ?string $id = null
+        ?string $id = null,
+        ?string $transferId = null
     ): self {
         self::guardAmount($amount);
 
@@ -34,7 +36,8 @@ class LedgerEntry
             $walletId,
             $amount,
             $type,
-            $operation
+            $operation,
+            $transferId
         );
     }
 
@@ -61,6 +64,11 @@ class LedgerEntry
     public function getOperation(): LedgerOperation
     {
         return $this->operation;
+    }
+
+    public function getTransferId(): ?string
+    {
+        return $this->transferId;
     }
 
     public function isCredit(): bool

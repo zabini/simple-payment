@@ -45,7 +45,7 @@ class ProcessTransferHandler
             throw $exception;
         }
 
-        $payerWallet->transferTo($payeeWallet, $transfer->getAmount());
+        $payerWallet->transferTo($payeeWallet, $transfer);
 
         $this->walletRepository->save($payerWallet);
         $this->walletRepository->save($payeeWallet);

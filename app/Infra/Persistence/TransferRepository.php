@@ -69,6 +69,7 @@ class TransferRepository implements TransferRepositoryInterface
                     type: LedgerEntryType::from($ledgerEntry->type),
                     operation: LedgerOperation::from($ledgerEntry->operation),
                     id: $ledgerEntry->id,
+                    transferId: $ledgerEntry->transfer_id
                 ))
                 ->all(),
         );

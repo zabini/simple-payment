@@ -8,5 +8,5 @@
 # Problemas e Melhorias
 
 - Criar DTOs pra retornar os dados aos usuários
-- link transfer o Ledger Entries
-
+- Terminar implementação dos testes
+- Add route to inspect transfer
