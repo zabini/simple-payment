@@ -7,6 +7,7 @@ namespace HyperfTest\Cases\Unit\Core\Application\Wallet;
 use App\Core\Application\Wallet\ProcessTransfer;
 use App\Core\Application\Wallet\ProcessTransferHandler;
 use App\Core\Domain\Contracts\Enum\TransferStatus;
+use App\Core\Domain\Contracts\Event\Publisher;
 use App\Core\Domain\Contracts\TransferAuthorizer;
 use App\Core\Domain\Contracts\TransferRepository;
 use App\Core\Domain\Contracts\WalletRepository;
@@ -88,7 +89,7 @@ class ProcessTransferHandlerTest extends TestCase
         $transferRepository = Mockery::mock(TransferRepository::class);
         $walletRepository = Mockery::mock(WalletRepository::class);
         $transferAuthorizer = Mockery::mock(TransferAuthorizer::class);
-        $publisher = Mockery::mock(\App\Core\Domain\Contracts\Event\Publisher::class);
+        $publisher = Mockery::mock(Publisher::class);
 
         $payerWallet = Wallet::create('payer-1', 'payer-wallet-1');
         $payerWallet->deposit(200);

@@ -15,8 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
 /**
+ * @covers \App\Core\Domain\User\UserFactory
  * @internal
- * @coversNothing
  */
 class UserFactoryTest extends TestCase
 {

@@ -7,8 +7,8 @@ namespace HyperfTest\Cases;
 use Hyperf\Testing\TestCase;
 
 /**
+ * @covers \App\Infra\Http\Controller\IndexController
  * @internal
- * @coversNothing
  */
 class IndexTest extends TestCase
 {

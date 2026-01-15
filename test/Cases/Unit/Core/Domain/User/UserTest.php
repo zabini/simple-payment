@@ -11,6 +11,7 @@ use App\Core\Domain\Wallet;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \App\Core\Domain\User
  * @internal
  */
 class UserTest extends TestCase
@@ -47,5 +48,28 @@ class UserTest extends TestCase
 
         $this->assertFalse($user->canTransfer());
         $this->assertTrue($user->cantTransfer());
+    }
+
+    public function testGettersReturnProvidedValues(): void
+    {
+        $wallet = Wallet::create('user-123', 'wallet-xyz');
+        $user = Common::make(
+            'user-123',
+            'Jane Smith',
+            DocumentType::cpf,
+            '98765432100',
+            'jane@example.com',
+            'super-secret',
+            $wallet
+        );
+
+        $this->assertSame('user-123', $user->getId());
+        $this->assertSame('Jane Smith', $user->getFullName());
+        $this->assertSame(DocumentType::cpf, $user->getDocumentType());
+        $this->assertSame('98765432100', $user->getDocument());
+        $this->assertSame('jane@example.com', $user->getEmail());
+        $this->assertSame('super-secret', $user->getPassword());
+        $this->assertSame($wallet, $user->getWallet());
+        $this->assertSame('wallet-xyz', $user->getWallet()->getId());
     }
 }

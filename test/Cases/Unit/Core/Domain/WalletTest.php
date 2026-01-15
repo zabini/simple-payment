@@ -12,6 +12,7 @@ use App\Core\Domain\Wallet;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @covers \App\Core\Domain\Wallet
  * @internal
  */
 class WalletTest extends TestCase
