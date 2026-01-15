@@ -10,12 +10,10 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use stdClass;
 
 abstract class Client
 {
-
     private HttpClient $http;
 
     public function __construct(
@@ -23,7 +21,6 @@ abstract class Client
         ?string $baseUri = null,
         ?array $extras = null,
     ) {
-
         $options = [
             'base_uri' => $baseUri ?? $this->baseUri(),
             'headers' => [

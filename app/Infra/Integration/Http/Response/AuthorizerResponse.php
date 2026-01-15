@@ -21,7 +21,7 @@ class AuthorizerResponse extends ResponseHandler
             if ($decoded instanceof stdClass) {
                 $authorization = $decoded->data->authorization ?? null;
                 if ($authorization === false) {
-                    return InvalidOperation::fromExternalReason('Some Dummy Reason');
+                    return InvalidOperation::fromExternalReason('External Authorization Failed');
                 }
 
                 if (isset($decoded->message) && is_string($decoded->message)) {

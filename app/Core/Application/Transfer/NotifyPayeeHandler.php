@@ -12,7 +12,8 @@ class NotifyPayeeHandler
     public function __construct(
         private TransferRepository $transferRepository,
         private Notifier $notifier
-    ) {}
+    ) {
+    }
 
     public function handle(NotifyPayee $command)
     {

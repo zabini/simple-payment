@@ -10,7 +10,9 @@ use App\Core\Domain\Contracts\Event\Subscriber;
 
 class CompletedSubscriber implements Subscriber
 {
-    public function __construct(private NotifyPayeeHandler $notifyPayeeHandler) {}
+    public function __construct(private NotifyPayeeHandler $notifyPayeeHandler)
+    {
+    }
 
     public function listen(): array
     {

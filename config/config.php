@@ -29,6 +29,8 @@ return [
         ],
         'notifier' => [
             'base_uri' => env('NOTIFIER_BASE_URI', 'https://util.devi.tools/api'),
+            'max_attempts' => (int) env('NOTIFIER_MAX_ATTEMPTS', 5),
+            'backoff_base_ms' => (int) env('NOTIFIER_BACKOFF_BASE_MS', 250),
         ],
     ],
 ];

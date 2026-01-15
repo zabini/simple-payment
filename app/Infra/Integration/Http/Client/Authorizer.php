@@ -12,7 +12,6 @@ use function Hyperf\Config\config;
 
 class Authorizer extends Client
 {
-
     public function requestAuthorization(string $payerId): bool
     {
         try {
