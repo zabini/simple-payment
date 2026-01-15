@@ -9,7 +9,7 @@ use App\Core\Application\User\FetchByIdHandler;
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
 use App\Core\Domain\Contracts\UserRepository;
-use App\Core\Domain\Exceptions\UserNotFound;
+use App\Core\Domain\Exceptions\NotFound;
 use App\Core\Domain\User\User;
 use App\Core\Domain\User\UserFactory;
 use Mockery;
@@ -52,11 +52,11 @@ class FetchByIdHandlerTest extends TestCase
         $repository->shouldReceive('getOneById')
             ->once()
             ->with($command->getId())
-            ->andThrow(UserNotFound::withId($command->getId()));
+            ->andThrow(NotFound::entityWithId('user', $command->getId()));
 
         $handler = new FetchByIdHandler($repository);
 
-        $this->expectException(UserNotFound::class);
+        $this->expectException(NotFound::class);
         $this->expectExceptionMessage('Provided user id (missing-id) was not found');
 
         $handler->handle($command);

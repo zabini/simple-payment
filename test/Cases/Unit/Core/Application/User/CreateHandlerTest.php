@@ -9,9 +9,9 @@ use App\Core\Application\User\CreateHandler;
 use App\Core\Domain\Contracts\Enum\DocumentType;
 use App\Core\Domain\Contracts\Enum\UserKind;
 use App\Core\Domain\Contracts\UserRepository;
+use App\Core\Domain\Exceptions\InvalidUser;
 use App\Core\Domain\User\User;
 use App\Core\Domain\User\UserFactory;
-use DomainException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -72,8 +72,8 @@ class CreateHandlerTest extends TestCase
 
         $handler = new CreateHandler($repository, $factory);
 
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Email already in use');
+        $this->expectException(InvalidUser::class);
+        $this->expectExceptionMessage(sprintf('Provided user email already been taken  %s', $command->getEmail()));
 
         $handler->handle($command);
     }
@@ -97,8 +97,8 @@ class CreateHandlerTest extends TestCase
 
         $handler = new CreateHandler($repository, $factory);
 
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Document already in use');
+        $this->expectException(InvalidUser::class);
+        $this->expectExceptionMessage(sprintf('Provided document (%s) already in use', $command->getDocument()));
 
         $handler->handle($command);
     }
