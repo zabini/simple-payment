@@ -19,6 +19,7 @@ class Wallet
     public function __construct(
         private string $id,
         private string $userId,
+        private float $committedBalance = 0.0,
         private array $ledgerEntries = []
     ) {
         $this->balance = $this->calculateBalance();
@@ -27,11 +28,16 @@ class Wallet
     /**
      * @param LedgerEntry[] $ledgerEntries
      */
-    public static function create(string $userId, ?string $id = null, array $ledgerEntries = []): self
-    {
+    public static function create(
+        string $userId,
+        ?string $id = null,
+        float $committedBalance = 0.0,
+        array $ledgerEntries = []
+    ): self {
         return new self(
             $id ?? Uuid::uuid4()->toString(),
             $userId,
+            $committedBalance,
             $ledgerEntries
         );
     }
@@ -82,7 +88,7 @@ class Wallet
     {
         $this->guardAmount($amount);
 
-        if ($amount > $this->balance) {
+        if ($amount > ($this->balance - $this->committedBalance)) {
             throw InvalidOperation::noEnoughFunds();
         }
 

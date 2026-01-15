@@ -6,12 +6,14 @@ namespace App\Infra\Persistence;
 
 use App\Core\Domain\Contracts\Enum\LedgerEntryType;
 use App\Core\Domain\Contracts\Enum\LedgerOperation;
+use App\Core\Domain\Contracts\Enum\TransferStatus;
 use App\Core\Domain\Contracts\UserRepository as UserRepositoryInterface;
 use App\Core\Domain\Exceptions\NotFound;
 use App\Core\Domain\LedgerEntry;
 use App\Core\Domain\User\User;
 use App\Core\Domain\User\UserFactory;
 use App\Core\Domain\Wallet;
+use App\Infra\ORM\Transfer;
 use App\Infra\ORM\User as ORMUser;
 use App\Infra\ORM\Wallet as ORMWallet;
 
@@ -96,6 +98,7 @@ class UserRepository implements UserRepositoryInterface
             wallet: Wallet::create(
                 id: $ormUser->wallet->id,
                 userId: $ormUser->wallet->user_id,
+                committedBalance: $this->loadCommitedBalance($ormUser->wallet->id),
                 ledgerEntries: $ormUser->wallet->ledgerEntries
                     ->map(fn ($ledgerEntry) => LedgerEntry::create(
                         walletId: $ledgerEntry->wallet_id,
@@ -107,5 +110,13 @@ class UserRepository implements UserRepositoryInterface
                     ->all(),
             )
         );
+    }
+
+    private function loadCommitedBalance(string $walletId): float
+    {
+        return floatval(Transfer::query()
+            ->where('payer_wallet_id', $walletId)
+            ->where('status', TransferStatus::pending->value)
+            ->sum('amount'));
     }
 }
