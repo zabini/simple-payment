@@ -33,6 +33,16 @@ services:
     networks:
       - simple-payment-net
 
+  simple-payment-redis:
+    image: redis
+    container_name: simple-payment-redis
+    restart: unless-stopped
+    command: redis-server --requirepass root_pass --appendonly yes
+    ports:
+      - "${REDIS_PORT}:6379"
+    networks:
+      - simple-payment-net
+
 volumes:
   simple-payment-data:
 

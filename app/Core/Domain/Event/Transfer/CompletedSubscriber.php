@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Event\Transfer;
 
-use App\Core\Application\Transfer\NotifyPayee;
-use App\Core\Application\Transfer\NotifyPayeeHandler;
+use App\Core\Domain\Contracts\AsyncJobDispatcher;
 use App\Core\Domain\Contracts\Event\Subscriber;
+use App\Infra\Async\NotifyPayee as AsyncNotifyPayee;
 
 class CompletedSubscriber implements Subscriber
 {
-    public function __construct(private NotifyPayeeHandler $notifyPayeeHandler)
+    public function __construct(private AsyncJobDispatcher $jobDispatcher)
     {
     }
 
@@ -24,9 +24,6 @@ class CompletedSubscriber implements Subscriber
     public function process(object $event): void
     {
         assert($event instanceof Completed);
-
-        $this->notifyPayeeHandler->handle(
-            new NotifyPayee($event->getTransferId())
-        );
+        $this->jobDispatcher->dispatch(new AsyncNotifyPayee($event->getTransferId()));
     }
 }

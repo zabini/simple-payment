@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infra\Integration\Http\Concerns;
 
-use App\Infra\Exception\JsonException\JsonException;
+use App\Infra\Exception\JsonException;
 use Exception;
 use stdClass;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infra\Exception\JsonException;
+namespace App\Infra\Exception;
 
 use Exception;
 
