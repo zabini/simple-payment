@@ -4,86 +4,107 @@ config:
 ---
 classDiagram
     direction TB
+
     class UserKind {
         common
         seller
     }
     <<enumeration>> UserKind
 
-    class Seller {
+    class DocumentType {
+        cpf
+        cnpj
     }
-
-    class Common {
-    }
-
-    class User {
-        -String id
-        -String name
-        -UserKind kind
-        -String document_type
-        -String document
-        -String mail
-        -String password
-        -Wallet wallet
-        +canTransfer() : Boolean
-    }
+    <<enumeration>> DocumentType
 
     class LedgerEntryType {
-        debit
         credit
+        debit
     }
     <<enumeration>> LedgerEntryType
 
     class LedgerOperation {
-      manual
-      transfer
+        manual
+        transfer
     }
     <<enumeration>> LedgerOperation
 
-    class LedgerEntry {
+    class TransferStatus {
+        pending
+        completed
+        failed
+        reverted
+    }
+    <<enumeration>> TransferStatus
+
+    class User {
         -UUID id
+        -string fullName
+        -UserKind kind
+        -DocumentType documentType
+        -string document
+        -string email
+        -string password
         -Wallet wallet
-        -Transaction transaction
-        -LedgerEntryType kind
-      -LedgerOperation operation
-        -float amount
+        +canTransfer() bool
+        +cantTransfer() bool
+    }
+
+    class Seller {
+        +canTransfer() bool
+    }
+
+    class Common {
+        +canTransfer() bool
     }
 
     class Wallet {
         -UUID id
-        -String userId
+        -UUID userId
         -float balance
-        -List entries
-        +debit(Money amount)
-        +credit(Money amount)
+        -float committedBalance
+        -LedgerEntry[] ledgerEntries
+        +deposit(float amount)
+        +credit(float amount)
+        +hasEnoughFunds(float amount) bool
+        +transferTo(Wallet payerWallet, Transfer transfer)
+        -guardAmount(float amount)
+        -appendEntry(LedgerEntry entry)
+        -calculateBalance() float
     }
 
-    class TransferStatus {
-        pending
-        authorized
-        settled
-        failed
+    class LedgerEntry {
+        -UUID id
+        -UUID walletId
+        -float amount
+        -LedgerEntryType type
+        -LedgerOperation operation
+        -?string transferId
+        +isCredit() bool
+        +isDebit() bool
     }
-    <<enumeration>> TransferStatus
 
     class Transfer {
         -UUID id
-        -TransferStatus status
-        -User payer
-        -User payee
+        -Wallet payerWallet
+        -Wallet payeeWallet
         -float amount
+        -TransferStatus status
+        -?string failedReason
+        +complete()
+        +fail(string reason)
+        +isntProcessable() bool
     }
-
-    <<enumeration>> TransferStatus
 
     User <|-- Seller
     User <|-- Common
-    User --* UserKind : uses
+    User "1" *-- "1" Wallet : owns
+    User --* UserKind : kind
+    User --* DocumentType : document
     LedgerEntry --* LedgerEntryType : uses
     LedgerEntry --* LedgerOperation : uses
+    LedgerEntry "0..*" -- "0..1" Transfer : transferId
     Transfer --* TransferStatus : uses
-    User "1" *-- "0..*" Wallet
     Wallet "1" -- "0..*" LedgerEntry
-    Transfer "1" -- "1..*" LedgerEntry
-    Transfer "1" -- "1" User : payer
-    Transfer "1" -- "1" User : payee
+    Transfer "1" -- "1" Wallet : payerWallet
+    Transfer "1" -- "1" Wallet : payeeWallet
