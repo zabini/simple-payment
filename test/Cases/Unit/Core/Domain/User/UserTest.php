@@ -11,9 +11,9 @@ use App\Core\Domain\Wallet;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \App\Core\Domain\User\User
- * @covers \App\Core\Domain\User\Seller
  * @covers \App\Core\Domain\User\Common
+ * @covers \App\Core\Domain\User\Seller
+ * @covers \App\Core\Domain\User\User
  * @internal
  */
 class UserTest extends TestCase
