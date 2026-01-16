@@ -36,10 +36,21 @@ API RESTful que permite transferências de dinheiro entre usuários comuns e loj
 - Testes com PHPUnit (`composer test`), análise estática com PHPStan (`composer analyse`) e formatação com PHP-CS-Fixer (`composer cs-fix`).
 
 ### Como executar
-1. `composer install` (gera `.env` a partir do `.env.example` se faltar).
-2. `make dev` (builda imagem, sobe os containers e executa as migrations). Alternativa manual: `docker-compose up -d` seguido de `docker-compose exec simple-payment-api php bin/hyperf.php migrate`.
-3. A API escuta em `:9501`. Em dev local, use `composer start` ou `php bin/hyperf.php server:watch` dentro do container.
-4. Testes: `make tests` (ou `SKIP_TESTS=1 make tests` para pular temporariamente).
+1. Clone o repositório do GitHub e entre na pasta: `git clone <URL-do-repo> && cd simple-payment`.
+2. Suba todo o stack com Docker: `make up`.
+3. Aguarde a mensagem `==> Stack ready`, que indica que o banco, Redis e API estão prontos.
+4. Visualize os logs do servidor para confirmar a subida: `make logs`.
+5. Não é necessário iniciar os workers da `async-queue`; o Hyperf já inicia os workers junto com o servidor.
+6. Para acompanhar as requisições (autorizador e notify), use: `make integration-logs`. Exemplo de saída:
+```log
+[2026-01-16 04:48:09] integration.INFO: [2026-01-16T04:48:09+00:00] "GET /api/v2/authorize?payer=ae366894-f45c-4aff-a989-bde18da12bbd HTTP/1.1" 403 [] []
+[2026-01-16 04:48:12] integration.INFO: [2026-01-16T04:48:12+00:00] "GET /api/v2/authorize?payer=ae366894-f45c-4aff-a989-bde18da12bbd HTTP/1.1" 403 [] []
+[2026-01-16 04:48:14] integration.INFO: [2026-01-16T04:48:14+00:00] "GET /api/v2/authorize?payer=ae366894-f45c-4aff-a989-bde18da12bbd HTTP/1.1" 200 [] []
+[2026-01-16 04:48:14] integration.INFO: [2026-01-16T04:48:14+00:00] "POST /api/v1/notify HTTP/1.1" 504 [] []
+[2026-01-16 04:48:20] integration.INFO: [2026-01-16T04:48:20+00:00] "POST /api/v1/notify HTTP/1.1" 504 [] []
+[2026-01-16 04:48:27] integration.INFO: [2026-01-16T04:48:27+00:00] "POST /api/v1/notify HTTP/1.1" 504 [] []
+[2026-01-16 04:48:33] integration.INFO: [2026-01-16T04:48:33+00:00] "POST /api/v1/notify HTTP/1.1" 204 [] []
+```
 
 ## Arquitetura e organização
 - **Domínio (`app/Core/Domain`)**: entidades (`User`, `Wallet`, `Transfer`, `LedgerEntry`), enums e regras de negócio. Ex.: `Wallet::transferTo` valida saldo, reserva valores (`committedBalance`) e gera lançamentos de débito/crédito vinculados à transferência.
