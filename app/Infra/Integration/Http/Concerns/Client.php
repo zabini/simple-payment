@@ -9,8 +9,10 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
+use Hyperf\Context\ApplicationContext;
 use Hyperf\Logger\LoggerFactory;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use stdClass;
 
 abstract class Client
@@ -20,11 +22,18 @@ abstract class Client
     private LoggerInterface $logger;
 
     public function __construct(
-        LoggerFactory $loggerFactory,
+        ?LoggerFactory $loggerFactory = null,
+        ?LoggerInterface $logger = null,
         ?string $baseUri = null,
         ?array $extras = null,
     ) {
-        $this->logger = $loggerFactory->get('integration', 'integration');
+        $loggerFactory ??= ApplicationContext::hasContainer()
+            ? ApplicationContext::getContainer()->get(LoggerFactory::class)
+            : null;
+
+        $this->logger = $logger
+            ?? $loggerFactory?->get('integration', 'integration')
+            ?? new NullLogger();
 
         $options = [
             'base_uri' => $baseUri ?? $this->baseUri(),
