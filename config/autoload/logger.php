@@ -31,4 +31,21 @@ return [
             ],
         ],
     ],
+    'integration' => [
+        'handler' => [
+            'class' => StreamHandler::class,
+            'constructor' => [
+                'stream' => BASE_PATH . '/runtime/logs/integration.log',
+                'level' => Logger::DEBUG,
+            ],
+        ],
+        'formatter' => [
+            'class' => LineFormatter::class,
+            'constructor' => [
+                'format' => null,
+                'dateFormat' => 'Y-m-d H:i:s',
+                'allowInlineLineBreaks' => true,
+            ],
+        ],
+    ],
 ];

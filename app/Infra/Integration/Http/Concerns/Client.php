@@ -9,18 +9,22 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
+use Hyperf\Logger\LoggerFactory;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
 abstract class Client
 {
     private HttpClient $http;
+    private LoggerInterface $logger;
 
     public function __construct(
-        private LoggerInterface $logger,
+        LoggerFactory $loggerFactory,
         ?string $baseUri = null,
         ?array $extras = null,
     ) {
+        $this->logger = $loggerFactory->get('integration', 'integration');
+
         $options = [
             'base_uri' => $baseUri ?? $this->baseUri(),
             'headers' => [
@@ -73,7 +77,7 @@ abstract class Client
 
         $handlerStack->push(Middleware::log(
             $this->logger,
-            new MessageFormatter(MessageFormatter::DEBUG)
+            new MessageFormatter(MessageFormatter::SHORT)
         ));
 
         $options['handler'] = $handlerStack;
