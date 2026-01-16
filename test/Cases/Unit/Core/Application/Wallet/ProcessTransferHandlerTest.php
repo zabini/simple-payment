@@ -12,11 +12,13 @@ use App\Core\Domain\Contracts\TransferAuthorizer;
 use App\Core\Domain\Contracts\TransferRepository;
 use App\Core\Domain\Contracts\WalletRepository;
 use App\Core\Domain\Event\Transfer\Completed as TransferCompleted;
+use App\Core\Domain\Exceptions\InvalidOperation;
 use App\Core\Domain\Transfer;
 use App\Core\Domain\Wallet;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use ReflectionProperty;
 
 /**
@@ -148,5 +150,81 @@ class ProcessTransferHandlerTest extends TestCase
         $publisherProperty->setValue($handler, $publisher);
 
         $handler->handle(new ProcessTransfer('transfer-2'));
+    }
+
+    public function testThrowsWhenTransferIsntProcessable(): void
+    {
+        $transferRepository = Mockery::mock(TransferRepository::class);
+        $walletRepository = Mockery::mock(WalletRepository::class);
+        $transferAuthorizer = Mockery::mock(TransferAuthorizer::class);
+
+        $payerWallet = Wallet::create('payer-1', 'payer-wallet-1');
+        $payeeWallet = Wallet::create('payee-1', 'payee-wallet-1');
+        $transfer = new Transfer(
+            id: 'transfer-3',
+            payerWallet: $payerWallet,
+            payeeWallet: $payeeWallet,
+            amount: 25.0,
+            status: TransferStatus::completed
+        );
+
+        $transferRepository->shouldReceive('getOneById')
+            ->once()
+            ->with('transfer-3')
+            ->andReturn($transfer);
+
+        $transferAuthorizer->shouldNotReceive('authorize');
+        $walletRepository->shouldNotReceive('save');
+        $transferRepository->shouldNotReceive('save');
+
+        $handler = new ProcessTransferHandler($transferRepository, $walletRepository, $transferAuthorizer);
+
+        $this->expectException(InvalidOperation::class);
+        $handler->handle(new ProcessTransfer('transfer-3'));
+    }
+
+    public function testPersistsFailedTransferWhenAuthorizationFails(): void
+    {
+        $transferRepository = Mockery::mock(TransferRepository::class);
+        $walletRepository = Mockery::mock(WalletRepository::class);
+        $transferAuthorizer = Mockery::mock(TransferAuthorizer::class);
+
+        $payerWallet = Wallet::create('payer-1', 'payer-wallet-1');
+        $payerWallet->deposit(100);
+        $payeeWallet = Wallet::create('payee-1', 'payee-wallet-1');
+
+        $transfer = Transfer::createPending(
+            payerWallet: $payerWallet,
+            payeeWallet: $payeeWallet,
+            amount: 30.0,
+            id: 'transfer-4'
+        );
+
+        $transferRepository->shouldReceive('getOneById')
+            ->once()
+            ->with('transfer-4')
+            ->andReturn($transfer);
+
+        $transferAuthorizer->shouldReceive('authorize')
+            ->once()
+            ->with('payer-1')
+            ->andThrow(new RuntimeException('authorization boom'));
+
+        $transferRepository->shouldReceive('save')
+            ->once()
+            ->with(Mockery::on(function (Transfer $failedTransfer) {
+                return $failedTransfer->getStatus() === TransferStatus::failed
+                    && $failedTransfer->getFailedReason() === 'authorization boom';
+            }))
+            ->andReturnNull();
+
+        $walletRepository->shouldNotReceive('save');
+
+        $handler = new ProcessTransferHandler($transferRepository, $walletRepository, $transferAuthorizer);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('authorization boom');
+
+        $handler->handle(new ProcessTransfer('transfer-4'));
     }
 }
