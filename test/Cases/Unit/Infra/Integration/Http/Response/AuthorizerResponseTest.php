@@ -13,8 +13,8 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * @covers \App\Infra\Integration\Http\Response\AuthorizerResponse
  * @covers \App\Infra\Integration\Http\Concerns\ResponseHandler
+ * @covers \App\Infra\Integration\Http\Response\AuthorizerResponse
  * @internal
  */
 class AuthorizerResponseTest extends TestCase

@@ -16,6 +16,7 @@ use stdClass;
 abstract class Client
 {
     private HttpClient $http;
+
     private LoggerInterface $logger;
 
     public function __construct(
