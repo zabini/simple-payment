@@ -119,7 +119,7 @@ curl --location 'http://localhost:9501/transfer' \
 - **Mediator / Publisher-Subscriber**: eventos de domínio desacoplam casos de uso (processamento de transferência e notificação).
 
 ## Testes e qualidade
-- Testes unitários e de integração usando repositórios em memória para isolamento. Cobertura aproximada: ~35% (ponto conhecido a evoluir).
+- Testes unitários e de integração usando repositórios em memória para isolamento. Cobertura aproximada: ~60% (ponto conhecido a evoluir).
 - TDD não foi seguido; os testes vieram após as primeiras iterações de código.
 - Comandos: `make tests` para suíte completa, `make test-filter filter=Pattern` para filtros, `make analyse` para análise estática e `make fix` para formatação.
 - Cobertura HTML opcional com `make coverage` (gera em `runtime/coverage/index.html`).
@@ -127,7 +127,7 @@ curl --location 'http://localhost:9501/transfer' \
 ## Pontos de atenção e limitações atuais
 - Crescimento do `ledgerEntries` dentro de `Wallet` pode degradar cálculo de saldo; precisa de estratégia de agregação/lazy loading para escala maior.
 - Ausência de DTOs torna contratos de entrada/saída menos explícitos e acopla controllers às entidades.
-- Cobertura de testes ainda baixa (~35%) e sem ciclo TDD.
+- Cobertura de testes ainda média (~60%) e sem ciclo TDD.
 - Senhas persistidas sem hashing e ausência de autenticação/autorização HTTP.
 - Dependência de serviços externos (autorizador e notificador) sem circuit breaker; falhas podem bloquear processamento.
 

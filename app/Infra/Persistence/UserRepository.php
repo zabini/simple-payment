@@ -25,11 +25,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function save(User $user): void
     {
-        $ormUser = new ORMUser([
+        $ormUser = $this->newOrmUser([
             'id' => $user->getId(),
             'full_name' => $user->getFullName(),
-            'kind' => $user->getKind(),
-            'document_type' => $user->getDocumentType(),
+            'kind' => $user->getKind()->value,
+            'document_type' => $user->getDocumentType()->value,
             'document' => $user->getDocument(),
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
@@ -37,7 +37,7 @@ class UserRepository implements UserRepositoryInterface
 
         $ormUser->save();
 
-        $ormWallet = new ORMWallet([
+        $ormWallet = $this->newOrmWallet([
             'id' => $user->getWallet()->getId(),
             'user_id' => $user->getWallet()->getUserId(),
         ]);
@@ -47,9 +47,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getOneById(string $id): User
     {
-        $ormUser = ORMUser::query()
-            ->with(['wallet.ledgerEntries'])
-            ->find($id);
+        $ormUser = $this->userQuery()->find($id);
         if (! $ormUser instanceof ORMUser) {
             throw NotFound::entityWithId('user', $id);
         }
@@ -59,8 +57,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getOneOrNullByEmail(string $email): ?User
     {
-        $ormUser = ORMUser::query()
-            ->with(['wallet.ledgerEntries'])
+        $ormUser = $this->userQuery()
             ->where('email', $email)
             ->first();
 
@@ -73,8 +70,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getOneOrNullByDocument(string $document): ?User
     {
-        $ormUser = ORMUser::query()
-            ->with(['wallet.ledgerEntries'])
+        $ormUser = $this->userQuery()
             ->where('document', $document)
             ->first();
 
@@ -108,14 +104,34 @@ class UserRepository implements UserRepositoryInterface
                         id: $ledgerEntry->id,
                         transferId: $ledgerEntry->transfer_id
                     ))
-                    ->all(),
+                ->all(),
             )
         );
     }
 
+    protected function newOrmUser(array $attributes): ORMUser
+    {
+        return new ORMUser($attributes);
+    }
+
+    protected function newOrmWallet(array $attributes): ORMWallet
+    {
+        return new ORMWallet($attributes);
+    }
+
+    protected function userQuery()
+    {
+        return ORMUser::query()->with(['wallet.ledgerEntries']);
+    }
+
+    protected function transferQuery()
+    {
+        return Transfer::query();
+    }
+
     private function loadCommitedBalance(string $walletId): float
     {
-        return floatval(Transfer::query()
+        return floatval($this->transferQuery()
             ->where('payer_wallet_id', $walletId)
             ->where('status', TransferStatus::pending->value)
             ->sum('amount'));
