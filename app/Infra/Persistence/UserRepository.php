@@ -81,6 +81,26 @@ class UserRepository implements UserRepositoryInterface
         return $this->rebuild($ormUser);
     }
 
+    protected function newOrmUser(array $attributes): ORMUser
+    {
+        return new ORMUser($attributes);
+    }
+
+    protected function newOrmWallet(array $attributes): ORMWallet
+    {
+        return new ORMWallet($attributes);
+    }
+
+    protected function userQuery()
+    {
+        return ORMUser::query()->with(['wallet.ledgerEntries']);
+    }
+
+    protected function transferQuery()
+    {
+        return Transfer::query();
+    }
+
     private function rebuild(ORMUser $ormUser): User
     {
         return $this->factory->create(
@@ -104,29 +124,9 @@ class UserRepository implements UserRepositoryInterface
                         id: $ledgerEntry->id,
                         transferId: $ledgerEntry->transfer_id
                     ))
-                ->all(),
+                    ->all(),
             )
         );
-    }
-
-    protected function newOrmUser(array $attributes): ORMUser
-    {
-        return new ORMUser($attributes);
-    }
-
-    protected function newOrmWallet(array $attributes): ORMWallet
-    {
-        return new ORMWallet($attributes);
-    }
-
-    protected function userQuery()
-    {
-        return ORMUser::query()->with(['wallet.ledgerEntries']);
-    }
-
-    protected function transferQuery()
-    {
-        return Transfer::query();
     }
 
     private function loadCommitedBalance(string $walletId): float

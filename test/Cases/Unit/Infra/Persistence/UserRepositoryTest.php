@@ -258,9 +258,11 @@ class UserRepositoryTest extends TestCase
             ),
         ]);
 
-        $wallet = new class() {
+        $wallet = new class {
             public string $id = 'wallet-1';
+
             public string $user_id = 'user-1';
+
             public Collection $ledgerEntries;
         };
         $wallet->ledgerEntries = $ledgerEntries;
@@ -288,12 +290,17 @@ class UserRepositoryTest extends TestCase
         string $operation,
         ?string $transferId = null
     ): object {
-        $entry = new class() {
+        $entry = new class {
             public string $id;
+
             public string $wallet_id;
+
             public float $amount;
+
             public string $type;
+
             public string $operation;
+
             public ?string $transfer_id;
         };
 

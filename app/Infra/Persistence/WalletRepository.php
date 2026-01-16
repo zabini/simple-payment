@@ -20,11 +20,11 @@ class WalletRepository implements WalletRepositoryInterface
     public function save(Wallet $wallet): void
     {
         foreach ($wallet->getLedgerEntries() as $ledgerEntry) {
-            if (ORMLedgerEntry::query()->find($ledgerEntry->getId()) instanceof ORMLedgerEntry) {
+            if ($this->ledgerEntryQuery()->find($ledgerEntry->getId()) instanceof ORMLedgerEntry) {
                 continue;
             }
 
-            $ormLedgerEntry = new ORMLedgerEntry([
+            $ormLedgerEntry = $this->newOrmLedgerEntry([
                 'id' => $ledgerEntry->getId(),
                 'wallet_id' => $ledgerEntry->getWalletId(),
                 'amount' => $ledgerEntry->getAmount(),
@@ -39,8 +39,7 @@ class WalletRepository implements WalletRepositoryInterface
 
     public function getOneById(string $id): Wallet
     {
-        $ormWallet = ORMWallet::query()
-            ->with('ledgerEntries')
+        $ormWallet = $this->walletQuery()
             ->find($id);
 
         if (! $ormWallet instanceof ORMWallet) {
@@ -64,11 +63,31 @@ class WalletRepository implements WalletRepositoryInterface
         );
     }
 
+    protected function ledgerEntryQuery()
+    {
+        return ORMLedgerEntry::query();
+    }
+
+    protected function walletQuery()
+    {
+        return ORMWallet::query()->with('ledgerEntries');
+    }
+
+    protected function transferQuery()
+    {
+        return Transfer::query();
+    }
+
+    protected function newOrmLedgerEntry(array $attributes): ORMLedgerEntry
+    {
+        return new ORMLedgerEntry($attributes);
+    }
+
     private function loadCommitedBalance(string $walletId): float
     {
-        return Transfer::query()
+        return floatval($this->transferQuery()
             ->where('payer_wallet_id', $walletId)
             ->where('status', TransferStatus::pending->value)
-            ->sum('amount');
+            ->sum('amount'));
     }
 }

@@ -20,7 +20,7 @@ class TransferRepository implements TransferRepositoryInterface
 {
     public function save(Transfer $transfer): void
     {
-        ORMTransfer::query()->updateOrCreate(
+        $this->transferQuery()->updateOrCreate(
             ['id' => $transfer->getId()],
             [
                 'payer_wallet_id' => $transfer->getPayerWallet()->getId(),
@@ -34,7 +34,7 @@ class TransferRepository implements TransferRepositoryInterface
 
     public function getOneById(string $id): Transfer
     {
-        $ormTransfer = ORMTransfer::query()
+        $ormTransfer = $this->transferQuery()
             ->with([
                 'payerWallet.ledgerEntries',
                 'payeeWallet.ledgerEntries',
@@ -55,6 +55,11 @@ class TransferRepository implements TransferRepositoryInterface
             TransferStatus::from($ormTransfer->status),
             $ormTransfer->failed_reason,
         );
+    }
+
+    protected function transferQuery()
+    {
+        return ORMTransfer::query();
     }
 
     private function hydrateWallet(ORMWallet $ormWallet): Wallet
