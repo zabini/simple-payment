@@ -11,12 +11,14 @@ services:
     command: ["php", "/opt/www/bin/hyperf.php", "server:watch"]
     volumes:
       - ./:/opt/www:cached
+      - simple-payment-vendor:/opt/www/vendor
     ports:
       - 9501:9501
     networks:
       - simple-payment-net
     depends_on:
       - simple-payment-db
+      - simple-payment-redis
 
   simple-payment-db:
     container_name: simple-payment-db
@@ -45,6 +47,7 @@ services:
 
 volumes:
   simple-payment-data:
+  simple-payment-vendor:
 
 networks:
   simple-payment-net:
