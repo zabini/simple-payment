@@ -15,9 +15,9 @@ use HyperfTest\Integration\Application\ApplicationIntegrationTestCase;
 
 /**
  * @internal
- * @covers \App\Core\Application\Wallet\ProcessTransferHandler
- * @covers \App\Core\Application\User\TransferHandler
  * @covers \App\Core\Application\Transfer\NotifyPayeeHandler
+ * @covers \App\Core\Application\User\TransferHandler
+ * @covers \App\Core\Application\Wallet\ProcessTransferHandler
  */
 class TransferUseCasesTest extends ApplicationIntegrationTestCase
 {
