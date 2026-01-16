@@ -19,7 +19,7 @@ API RESTful que permite transferências de dinheiro entre usuários comuns e loj
 - Escopo coberto: criação de usuário, consulta por id, depósito, criação de transferência e notificação do recebedor.
 - Não há autenticação ou autorização de chamadas HTTP; foco está no domínio de pagamentos.
 - As operações são síncronas até a conclusão da transferência; a notificação do recebedor é disparada de forma assíncrona.
-- Dados de senha são persistidos como texto simples (mantido assim para o exercício); em produção seria obrigatório aplicar hashing, ou delegar a autenticação para um microserviço próprio para isso.
+- Dados de senha são persistidos como texto simples (mantido assim para o exercício); em produção seria obrigatório aplicar hashing, ou delegar a autenticação para um microserviço próprio para esse fim.
 
 ## Decisões técnicas
 - **Framework Hyperf + Swoole**: escolhido por alinhar com a stack usada pela empresa e entregar alta performance em I/O.

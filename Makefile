@@ -4,9 +4,14 @@ image:
 
 SKIP_TESTS ?= 0
 
-up:
-	@echo "Uping all containers..."
-	docker-compose up -d
+.PHONY: env
+env:
+	@if [ ! -f .env ]; then \
+		echo "Creating .env from .env.example"; \
+		cp .env.example .env; \
+	else \
+		echo ".env already exists"; \
+	fi
 
 down:
 	@echo "Downing all containers..."
@@ -59,6 +64,20 @@ analyse:
 	docker-compose exec -ti simple-payment-api composer analyse
 
 sleep:
-	@sleep 5
+	@sleep 10
 
-dev: image up sleep migrate
+install:
+	@echo "Installing dependencies..."
+	docker-compose exec -ti simple-payment-api composer install
+
+start-stack:
+	@echo "Starting all containers..."
+	docker-compose up -d
+
+logs:
+	docker-compose logs -f
+
+integration-logs:
+	tail -f ./runtime/logs/integration.log
+
+up: env image sleep install migrate
