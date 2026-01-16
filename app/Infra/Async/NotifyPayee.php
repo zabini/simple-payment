@@ -15,7 +15,7 @@ class NotifyPayee extends Job
 {
     public function __construct(private string $transferId)
     {
-        $this->setMaxAttempts(max(1, (int) config('integration.notifier.max_attempts', 5)));
+        $this->setMaxAttempts(max(1, (int) config('integration.notifier.max_attempts', 10)));
     }
 
     public function handle()
