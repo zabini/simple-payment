@@ -7,9 +7,7 @@ namespace HyperfTest\Cases\Integration\Application;
 use App\Core\Application\Transfer\NotifyPayee;
 use App\Core\Application\Transfer\NotifyPayeeHandler;
 use App\Core\Application\User\Transfer as CreateTransfer;
-use App\Core\Application\User\TransferHandler;
 use App\Core\Application\Wallet\ProcessTransfer;
-use App\Core\Application\Wallet\ProcessTransferHandler;
 use App\Core\Domain\Contracts\Enum\TransferStatus;
 use App\Core\Domain\Event\Transfer\Completed as CompletedEvent;
 use App\Core\Domain\Exceptions\InvalidOperation;
@@ -17,6 +15,9 @@ use HyperfTest\Integration\Application\ApplicationIntegrationTestCase;
 
 /**
  * @internal
+ * @covers \App\Core\Application\Wallet\ProcessTransferHandler
+ * @covers \App\Core\Application\User\TransferHandler
+ * @covers \App\Core\Application\Transfer\NotifyPayeeHandler
  */
 class TransferUseCasesTest extends ApplicationIntegrationTestCase
 {

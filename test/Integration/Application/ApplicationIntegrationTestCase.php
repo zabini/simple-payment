@@ -22,7 +22,6 @@ use App\Core\Domain\Contracts\TransferRepository as TransferRepositoryInterface;
 use App\Core\Domain\Contracts\UserRepository as UserRepositoryInterface;
 use App\Core\Domain\Contracts\WalletRepository as WalletRepositoryInterface;
 use App\Core\Domain\User\UserFactory;
-use App\Core\Domain\Wallet;
 use Hyperf\Context\ApplicationContext;
 use HyperfTest\Doubles\FakeTransferAuthorizer;
 use HyperfTest\Doubles\InMemoryTransferRepository;
@@ -31,6 +30,7 @@ use HyperfTest\Doubles\InMemoryWalletRepository;
 use HyperfTest\Doubles\RecordingPublisher;
 use HyperfTest\Doubles\SpyNotifier;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 abstract class ApplicationIntegrationTestCase extends TestCase
 {
@@ -140,11 +140,11 @@ abstract class ApplicationIntegrationTestCase extends TestCase
     }
 
     /**
-     * @param TransferHandler|ProcessTransferHandler $handler
+     * @param ProcessTransferHandler|TransferHandler $handler
      */
     private function injectPublisher(object $handler): void
     {
-        $reflection = new \ReflectionClass($handler);
+        $reflection = new ReflectionClass($handler);
         if ($reflection->hasProperty('publisher')) {
             $property = $reflection->getProperty('publisher');
             $property->setAccessible(true);

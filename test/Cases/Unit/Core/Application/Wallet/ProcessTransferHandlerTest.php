@@ -18,8 +18,8 @@ use App\Core\Domain\Wallet;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use ReflectionProperty;
+use RuntimeException;
 
 /**
  * @covers \App\Core\Application\Wallet\ProcessTransferHandler

@@ -6,10 +6,7 @@ namespace HyperfTest\Cases\Integration\Application;
 
 use App\Core\Application\User\Deposit;
 use App\Core\Application\User\DepositHandler;
-use App\Core\Application\User\FetchById;
-use App\Core\Application\User\FetchByIdHandler;
 use App\Core\Application\User\Transfer;
-use App\Core\Application\User\TransferHandler;
 use App\Core\Domain\Contracts\Enum\TransferStatus;
 use App\Core\Domain\Contracts\Enum\UserKind;
 use App\Core\Domain\Event\Transfer\PendingCreated;
@@ -17,6 +14,9 @@ use HyperfTest\Integration\Application\ApplicationIntegrationTestCase;
 
 /**
  * @internal
+ * @covers \App\Core\Application\User\Create
+ * @covers \App\Core\Application\User\FetchByIdHandler
+ * @covers \App\Core\Application\User\TransferHandler
  */
 class UserUseCasesTest extends ApplicationIntegrationTestCase
 {
